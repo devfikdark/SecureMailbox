@@ -1,5 +1,5 @@
 {
-  "name": "node",
+  "name": "securemailbox",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -9,7 +9,7 @@
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
-  "author": "",
+  "author": "Z2 Hub",
   "license": "ISC",
   "dependencies": {
     "@feathersjs/express": "^4.5.11",
