@@ -1,7 +1,8 @@
 import feathers from '@feathersjs/feathers';
 import express from '@feathersjs/express';
 import socketio from '@feathersjs/socketio';
-import WelcomeService from './src/services/WelcomeService';
+import SignUp from './src/services/SignUp';
+import SignIn from './src/services/SignIn';
 import './src/config/ImportEnv';
 import './src/config/dbConfig';
 
@@ -16,8 +17,14 @@ app.configure(socketio());
 // Enable REST services
 app.configure(express.rest());
 
-// Register services
-app.use('/welcome', new WelcomeService());
+// Route
+app.use('/api/auth/signup', new SignUp());
+app.use('/api/auth/signin', new SignIn());
+
+// Docs
+app.use('/docs', (req, res) => {
+  res.redirect('https://documenter.getpostman.com/view/9978541/TzK2Ytab');
+});
 
 // New connections connect to stream channel
 app.on('connection', con => app.channel('stream').join(con));
