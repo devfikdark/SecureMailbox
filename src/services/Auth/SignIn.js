@@ -1,8 +1,8 @@
-import userValidator from '../utils/validators/User';
-import User from '../models/User'
-import sendData from '../utils/response/sendData';
-import sendMessage from '../utils/response/sendMessage';
-import createJWT from '../middlewares/jwtToken'
+import userValidator from '../../utils/validators/User';
+import User from '../../models/User'
+import sendData from '../../utils/response/sendData';
+import sendMessage from '../../utils/response/sendMessage';
+import createJWT from '../../middlewares/jwtToken'
 
 class SignIn {
   async create (body) {

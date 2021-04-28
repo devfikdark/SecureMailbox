@@ -1,6 +1,6 @@
-import User from '../models/User'
-import sendMessage from '../utils/response/sendMessage';
-import userValidator from '../utils/validators/User';
+import User from '../../models/User'
+import sendMessage from '../../utils/response/sendMessage';
+import userValidator from '../../utils/validators/User';
 
 class SignUp {
   async create (body) {
