@@ -9,7 +9,7 @@
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
-  "author": "Z2 Hub",
+  "author": "Mazharul",
   "license": "ISC",
   "dependencies": {
     "@feathersjs/express": "^4.5.11",
@@ -18,8 +18,10 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "bcryptjs": "^2.4.3",
     "concurrently": "^6.0.2",
     "dotenv": "^8.2.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.0"
   },
   "devDependencies": {

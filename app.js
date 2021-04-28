@@ -1,7 +1,12 @@
 import feathers from '@feathersjs/feathers';
 import express from '@feathersjs/express';
 import socketio from '@feathersjs/socketio';
-import WelcomeService from './src/services/WelcomeService';
+import authorizedUser from './src/middlewares/authorizedUser';
+import SignUp from './src/services/Auth/SignUp';
+import SignIn from './src/services/Auth/SignIn';
+import Users from './src/services/Admin/Users';
+import GlobalErrorHandler from './src/utils/errors/GlobalErrorHandler'
+import AppError from './src/utils/errors/AppError'
 import './src/config/ImportEnv';
 import './src/config/dbConfig';
 
@@ -16,8 +21,23 @@ app.configure(socketio());
 // Enable REST services
 app.configure(express.rest());
 
-// Register services
-app.use('/welcome', new WelcomeService());
+// Auth
+app.use('/api/auth/signup', new SignUp());
+app.use('/api/auth/signin', new SignIn());
+
+// Admin
+app.use('/api/users', authorizedUser, new Users());
+
+// Docs
+app.use('/docs', (req, res) => {
+  res.redirect('https://documenter.getpostman.com/view/9978541/TzK2Ytab');
+});
+
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+app.use(GlobalErrorHandler);
 
 // New connections connect to stream channel
 app.on('connection', con => app.channel('stream').join(con));
