@@ -1,11 +1,19 @@
 import "./App.css";
-import { Button } from "@material-ui/core";
+import HeaderComponent from "./components/HeaderComponent";
+import { NotificationContainer } from "react-notifications";
+import { Switch, Route } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
     <div className="App">
-      <h1>hello there</h1>
-      <Button>Hello</Button>
+      <HeaderComponent />
+      <Switch>
+        <Route exact path="/login" component={LoginPage} />
+        <Route exact path="/register" component={RegisterPage} />
+      </Switch>
+      <NotificationContainer />
     </div>
   );
 }
