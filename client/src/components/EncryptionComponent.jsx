@@ -3,6 +3,7 @@ import { Button, Container, Grid, TextField } from "@material-ui/core";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import { makeStyles } from "@material-ui/core/styles";
 import Notification from "../components/Notification";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   fileInput: {
@@ -41,8 +42,9 @@ function EncryptionComponent() {
     if (!handleValidation()) {
       Notification("Warning", "All fields are required!", "warning");
     } else {
-      console.log(filePath);
       console.log(encryptionKey);
+      console.log(filePath);
+      //   axios.post('http://localhost:5000/encrypt-file', {file: filePath, key: encryptionKey});
     }
     console.log(e);
   };
