@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Button, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MailIcon from "@material-ui/icons/Mail";
 import TextsmsIcon from "@material-ui/icons/Textsms";
@@ -35,35 +35,51 @@ function HeaderComponent() {
             Secure Mail Box
           </Typography>
 
-          <Link to="/mails">
-            <Button color="inherit" startIcon={<MailIcon />} className={classes.buttonStyle}>
-              Mail
-            </Button>
-          </Link>
+          <Box px={1}>
+            <Link to="/mails">
+              <Button color="inherit" startIcon={<MailIcon />} className={classes.buttonStyle}>
+                Mail
+              </Button>
+            </Link>
+          </Box>
 
-          <Link to="/live-chat">
-            <Button color="inherit" startIcon={<TextsmsIcon />} className={classes.buttonStyle}>
-              Live Chat
-            </Button>
-          </Link>
-          <Link to="/secure-file">
-            <Button color="inherit" startIcon={<SecurityIcon />} className={classes.buttonStyle}>
-              Encryption/ Decryption
-            </Button>
-          </Link>
-          <Link to="/login">
+          <Box px={1}>
+            <Link to="/live-chat">
+              <Button color="inherit" startIcon={<TextsmsIcon />} className={classes.buttonStyle}>
+                Live Chat
+              </Button>
+            </Link>
+          </Box>
+
+          <Box px={1}>
+            <Link to="/secure-file">
+              <Button color="inherit" startIcon={<SecurityIcon />} className={classes.buttonStyle}>
+                Encryption/ Decryption
+              </Button>
+            </Link>
+          </Box>
+
+          <Box px={1}>
+            <Link to="/login">
+              <Button color="inherit" className={classes.buttonStyle}>
+                Login
+              </Button>
+            </Link>
+          </Box>
+
+          <Box px={1}>
+            <Link to="/register">
+              <Button color="inherit" className={classes.buttonStyle}>
+                Register
+              </Button>
+            </Link>
+          </Box>
+
+          <Box px={1}>
             <Button color="inherit" className={classes.buttonStyle}>
-              Login
+              Logout
             </Button>
-          </Link>
-          <Link to="/register">
-            <Button color="inherit" className={classes.buttonStyle}>
-              Register
-            </Button>
-          </Link>
-          <Button color="inherit" className={classes.buttonStyle}>
-            Logout
-          </Button>
+          </Box>
         </Toolbar>
       </AppBar>
     </div>

@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Tab, Tabs } from "@material-ui/core";
 import TabPanelComponent from "../components/TabPanelComponent";
+import EncryptionComponent from "../components/EncryptionComponent";
+import DecryptionComponent from "../components/DecryptionComponent";
 
 function a11yProps(index) {
   return {
@@ -45,10 +47,10 @@ function ConversionPage() {
       </Paper>
 
       <TabPanelComponent value={value} index={0}>
-        <h1>Encryption process</h1>
+        <EncryptionComponent />
       </TabPanelComponent>
       <TabPanelComponent value={value} index={1}>
-        <h1>Decryption process</h1>
+        <DecryptionComponent />
       </TabPanelComponent>
     </div>
   );
