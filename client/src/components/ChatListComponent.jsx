@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, List, ListItem, Badge, ListItemAvatar, ListItemText, Card, CardContent, Typography, Box } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {

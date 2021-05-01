@@ -1,10 +1,9 @@
 import React from "react";
-import { AppBar, Toolbar, IconButton, Typography, Button } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MailIcon from "@material-ui/icons/Mail";
 import TextsmsIcon from "@material-ui/icons/Textsms";
 import SecurityIcon from "@material-ui/icons/Security";
-import MenuIcon from "@material-ui/icons/Menu";
 import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({

@@ -1,4 +1,4 @@
-import { Box, Container, CssBaseline, Divider, Grid, Typography } from "@material-ui/core";
+import { Container, CssBaseline, Grid } from "@material-ui/core";
 import React from "react";
 import ChatComponent from "../components/ChatComponent";
 import ChatListComponent from "../components/ChatListComponent";

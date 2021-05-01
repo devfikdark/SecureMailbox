@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import MailPage from "./pages/MailPage";
 import LiveChatPage from "./pages/LiveChatPage";
+import ConversionPage from "./pages/ConversionPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route exact path="/login" component={LoginPage} />
         <Route exact path="/register" component={RegisterPage} />
         <Route exact path="/mails" component={MailPage} />
+        <Route exact path="/secure-file" component={ConversionPage} />
         <Route exact path="/live-chat" component={LiveChatPage} />
       </Switch>
       <NotificationContainer />
