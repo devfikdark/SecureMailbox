@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  buttonStyle: {
+    textTransform: "capitalize",
+  },
 }));
 
 function HeaderComponent() {
@@ -33,28 +36,34 @@ function HeaderComponent() {
           </Typography>
 
           <Link to="/mails">
-            <Button color="inherit" startIcon={<MailIcon />}>
+            <Button color="inherit" startIcon={<MailIcon />} className={classes.buttonStyle}>
               Mail
             </Button>
           </Link>
 
           <Link to="/live-chat">
-            <Button color="inherit" startIcon={<TextsmsIcon />}>
+            <Button color="inherit" startIcon={<TextsmsIcon />} className={classes.buttonStyle}>
               Live Chat
             </Button>
           </Link>
           <Link to="/secure-file">
-            <Button color="inherit" startIcon={<SecurityIcon />}>
-              Encryption/Decryption
+            <Button color="inherit" startIcon={<SecurityIcon />} className={classes.buttonStyle}>
+              Encryption/ Decryption
             </Button>
           </Link>
           <Link to="/login">
-            <Button color="inherit">Login</Button>
+            <Button color="inherit" className={classes.buttonStyle}>
+              Login
+            </Button>
           </Link>
           <Link to="/register">
-            <Button color="inherit">Register</Button>
+            <Button color="inherit" className={classes.buttonStyle}>
+              Register
+            </Button>
           </Link>
-          <Button color="inherit">Logout</Button>
+          <Button color="inherit" className={classes.buttonStyle}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
