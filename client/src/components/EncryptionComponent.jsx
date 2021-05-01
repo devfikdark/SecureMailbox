@@ -44,6 +44,16 @@ function EncryptionComponent() {
     } else {
       console.log(encryptionKey);
       console.log(filePath);
+      const formData = new FormData();
+      formData.append("file", filePath);
+      formData.append("upload_preset", "ml_default");
+      const options = { method: "POST", body: formData };
+      return fetch("https://api.Cloudinary.com/v1_1/dck5ccwjv/image/upload", options)
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
       //   axios.post('http://localhost:5000/encrypt-file', {file: filePath, key: encryptionKey});
     }
     console.log(e);
