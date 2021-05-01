@@ -65,7 +65,7 @@ function EncryptionComponent() {
             </Grid>
           </Grid>
           <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-            Encrypt
+            Encrypt file
           </Button>
         </form>
       </Container>
