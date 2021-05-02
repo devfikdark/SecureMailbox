@@ -22,9 +22,10 @@ function NotificationListPage() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant="subtitle1">Notification title</Typography>
+              <Typography variant="caption">Sun 22, 2021</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="body-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum sed eos iusto debitis odio nisi quam voluptatem eius voluptas nulla!</Typography>
+              <Typography variant="body1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum sed eos iusto debitis odio nisi quam voluptatem eius voluptas nulla!</Typography>
             </Grid>
           </Grid>
         </Box>
