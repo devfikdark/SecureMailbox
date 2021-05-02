@@ -9,6 +9,7 @@ import LiveChatPage from "./pages/LiveChatPage";
 import ConversionPage from "./pages/ConversionPage";
 import NotificationListPage from "./pages/NotificationListPage";
 import CreateNotificationPage from "./pages/CreateNotificationPage";
+import RegisteredUserListPage from "./pages/RegisteredUserListPage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route exact path="/live-chat" component={LiveChatPage} />
         <Route exact path="/notification-list" component={NotificationListPage} />
         <Route exact path="/create-notification" component={CreateNotificationPage} />
+        <Route exact path="/user-list" component={RegisteredUserListPage} />
       </Switch>
       <NotificationContainer />
     </div>
