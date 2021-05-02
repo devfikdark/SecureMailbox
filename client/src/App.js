@@ -7,6 +7,8 @@ import RegisterPage from "./pages/RegisterPage";
 import MailPage from "./pages/MailPage";
 import LiveChatPage from "./pages/LiveChatPage";
 import ConversionPage from "./pages/ConversionPage";
+import NotificationListPage from "./pages/NotificationListPage";
+import CreateNotificationPage from "./pages/CreateNotificationPage";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route exact path="/mails" component={MailPage} />
         <Route exact path="/secure-file" component={ConversionPage} />
         <Route exact path="/live-chat" component={LiveChatPage} />
+        <Route exact path="/notification-list" component={NotificationListPage} />
+        <Route exact path="/create-notification" component={CreateNotificationPage} />
       </Switch>
       <NotificationContainer />
     </div>

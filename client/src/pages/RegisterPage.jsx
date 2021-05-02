@@ -40,17 +40,16 @@ export default function RegisterPage() {
   // STATES
 
   const [signUpForm, setSignUpForm] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const { firstName, lastName, email, password, confirmPassword } = signUpForm;
+  const { name, email, password, confirmPassword } = signUpForm;
 
   // METHODS
   const handleValidation = () => {
-    if (firstName === "" || lastName === "" || email === "" || password === "" || confirmPassword === "") {
+    if (name === "" || email === "" || password === "" || confirmPassword === "") {
       return false;
     } else if (password !== confirmPassword) {
       return "pass";
@@ -65,18 +64,19 @@ export default function RegisterPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (handleValidation() === false) {
-      Notification("Error", "All fields are required", "error");
+      Notification("Warning", "All fields are required", "warning");
     } else if (handleValidation() === "pass") {
       Notification("Warning", "Password fields didn't match", "warning");
     } else {
       const information = {
-        name: `${firstName} ${lastName}`,
+        name: name,
         email: email,
         password: password,
       };
       axios
         .post("/api/v1/auth/signup", information)
         .then((res) => {
+          console.log(res.data.data);
           const userId = res.data.data._id;
           const name = res.data.data.name;
           localStorage.setItem(
@@ -108,11 +108,8 @@ export default function RegisterPage() {
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField autoComplete="firstName" name="firstName" value={firstName} onChange={handleChange} variant="outlined" required fullWidth id="firstName" label="First Name" autoFocus />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField variant="outlined" required fullWidth id="lastName" label="Last Name" name="lastName" value={lastName} onChange={handleChange} autoComplete="lname" />
+            <Grid item xs={12}>
+              <TextField autoComplete="name" name="name" value={name} onChange={handleChange} variant="outlined" required fullWidth id="name" label="First Name" autoFocus />
             </Grid>
             <Grid item xs={12}>
               <TextField variant="outlined" required fullWidth id="email" label="Email Address" name="email" value={email} onChange={handleChange} autoComplete="email" />

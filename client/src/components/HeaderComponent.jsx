@@ -2,6 +2,8 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Button, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MailIcon from "@material-ui/icons/Mail";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import AddAlertIcon from "@material-ui/icons/AddAlert";
 import TextsmsIcon from "@material-ui/icons/Textsms";
 import SecurityIcon from "@material-ui/icons/Security";
 import { Link, useHistory } from "react-router-dom";
@@ -55,6 +57,22 @@ function HeaderComponent() {
             <Link to="/secure-file">
               <Button color="inherit" startIcon={<SecurityIcon />} className={classes.buttonStyle}>
                 Encryption/ Decryption
+              </Button>
+            </Link>
+          </Box>
+
+          <Box px={1}>
+            <Link to="/notification-list">
+              <Button color="inherit" startIcon={<NotificationsIcon />} className={classes.buttonStyle}>
+                Notifications
+              </Button>
+            </Link>
+          </Box>
+
+          <Box px={1}>
+            <Link to="/create-notification">
+              <Button color="inherit" startIcon={<AddAlertIcon />} className={classes.buttonStyle}>
+                Create Notification
               </Button>
             </Link>
           </Box>
