@@ -1,7 +1,6 @@
-import userValidator from '../../utils/validators/User';
 import User from '../../models/User'
 import sendData from '../../utils/response/sendData';
-import sendMessage from '../../utils/response/sendMessage';
+import AppError from '../../utils//errors/AppError';
 import createJWT from '../../middlewares/jwtToken'
 
 class SignIn {
@@ -9,8 +8,8 @@ class SignIn {
     const { email, password } = body;
     
     // body verification
-    if (!email) return sendMessage('fail', 'provide your email');
-    if (!password) return sendMessage('fail', 'provide your password');
+    if (!email) return next(new AppError('provide your email', 400));
+    if (!password) return next(new AppError('provide your password', 400));
 
     // check auth
     const userInfo = await User.findOne({
@@ -18,7 +17,7 @@ class SignIn {
     }).select('+password');
 
     if (!userInfo || !(await userInfo.verifyPassword(password, userInfo.password))) {
-      return sendMessage('fail', 'Incorrect username or password.');
+      return next(new AppError('Incorrect username or password', 400));
     }
 
     return sendData('ok', {
