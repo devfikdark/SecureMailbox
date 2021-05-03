@@ -3,8 +3,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import { Link, useHistory } from "react-router-dom";
 import { deepPurple } from "@material-ui/core/colors";
 import Paper from "@material-ui/core/Paper";
@@ -63,8 +61,11 @@ export default function SignIn() {
 
   // METHODS
   const handleValidation = () => {
+    const validEmail = /.+@.+\..+/.test(email);
     if (email === "" || password === "") {
-      return false;
+      return Notification("Warning", "All fields required", "warning");
+    } else if (!validEmail) {
+      return Notification("Warning", "Email is not valid", "warning");
     } else {
       return true;
     }
@@ -73,40 +74,21 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!handleValidation()) {
-      Notification("Warning", "All fields required", "warning");
-    } else {
-      const information = {
-        email,
-        password,
-      };
+    if (handleValidation()) {
+      axios
+        .post("/auth/signin", { email: email, password: password })
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem("name", res.data.data.fullName);
+          localStorage.setItem("email", res.data.data.email);
+          localStorage.setItem("token", res.data.data.token);
 
-      if (information.email === "admin@gmail.com" && information.password === "Admin@123") {
-        localStorage.setItem("admin", true);
-        history.push("/admin");
-        window.location.reload();
-      } else {
-        axios
-          .post("/api/v1/auth/signin", information)
-          .then((res) => {
-            // console.log(res);
-            const userId = res.data.data._id;
-            const name = res.data.data.name;
-            localStorage.setItem(
-              "login",
-              JSON.stringify({
-                login: true,
-                userId,
-                name,
-              })
-            );
-            history.push("/profile");
-            window.location.reload();
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+          history.push("/mails");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
     }
   };
 
@@ -137,18 +119,12 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link to="/signin" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
               <Grid item>
-                <Link to="/signup" variant="body2">
+                <Link to="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

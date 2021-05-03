@@ -24,14 +24,12 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    backgroundColor: deepPurple[700],
+    backgroundColor: deepPurple[800],
     "&:hover": {
       backgroundColor: deepPurple[900],
     },
   },
-  inputStyle: {
-    color: deepPurple[400],
-  },
+
   wrapper: {
     margin: theme.spacing(1),
     position: "relative",
@@ -48,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 export default function RegisterPage() {
   const classes = useStyles();
   const history = useHistory();
+
   // STATES
   const [loading, setLoading] = useState(false);
   const [signUpForm, setSignUpForm] = useState({
@@ -90,29 +89,17 @@ export default function RegisterPage() {
       axios
         .post("/auth/signup", information)
         .then((res) => {
-          console.log(res);
-          Notification("Congratulations", "Your account is created successfully", "success");
-          history.push("/login");
+          if (res.data.status === "ok") {
+            Notification("Congratulations", "Your account is created successfully", "success");
+            history.push("/login");
+          } else {
+            Notification("Error", `${res.data.message}`, "error");
+          }
         })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => setLoading(false));
-
-      // axios
-      //   .post("/auth/signup", information)
-      //   .then((res) => {
-      //     console.log(res);
-      //     Notification("Congratulations", "Your account is created successfully", "success");
-      //     history.push("/login");
-      //   })
-      //   .catch((err) => {
-      //     if (err.response.data.message) {
-      //       Notification("Error", `${err.response.data.message}`, "error");
-      //     } else {
-      //       Notification("Error", "Something went wrong. Please check your internet connection", "error");
-      //     }
-      //   });
+        .finally(() => {
+          setLoading(false);
+          setSignUpForm({ name: "", email: "", password: "", confirmPassword: "" });
+        });
     }
   };
 
@@ -129,39 +116,16 @@ export default function RegisterPage() {
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField autoComplete="name" name="name" value={name} onChange={handleChange} variant="outlined" required fullWidth id="name" label="First Name" autoFocus />
+              <TextField autoFocus name="name" value={name} onChange={handleChange} variant="outlined" required fullWidth label="First Name" />
             </Grid>
             <Grid item xs={12}>
-              <TextField variant="outlined" required fullWidth id="email" label="Email Address" name="email" value={email} onChange={handleChange} autoComplete="email" />
+              <TextField variant="outlined" required fullWidth label="Email Address" name="email" value={email} onChange={handleChange} />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                value={password}
-                onChange={handleChange}
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
+              <TextField variant="outlined" required fullWidth name="password" value={password} onChange={handleChange} label="Password" type="password" />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="confirmPassword"
-                value={confirmPassword}
-                onChange={handleChange}
-                label="Confirm Password"
-                type="password"
-                id="password2"
-                autoComplete="current-password"
-                className={classes.inputStyle}
-              />
+              <TextField variant="outlined" required fullWidth name="confirmPassword" value={confirmPassword} onChange={handleChange} label="Confirm Password" type="password" />
             </Grid>
           </Grid>
           <div className={classes.wrapper}>
