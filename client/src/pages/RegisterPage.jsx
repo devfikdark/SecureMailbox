@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Avatar, Grid, Typography, Container, Checkbox, CssBaseline, TextField, Button, FormControlLabel } from "@material-ui/core";
+import { Avatar, Grid, Typography, Container, CssBaseline, TextField, Button } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { deepPurple } from "@material-ui/core/colors";
 import { Link, useHistory } from "react-router-dom";
@@ -49,10 +49,14 @@ export default function RegisterPage() {
 
   // METHODS
   const handleValidation = () => {
+    const validEmail = /.+@.+\..+/.test(email);
+
     if (name === "" || email === "" || password === "" || confirmPassword === "") {
-      return false;
+      return Notification("Warning", "All fields are required", "warning");
     } else if (password !== confirmPassword) {
-      return "pass";
+      return Notification("Warning", "Password didn't match!", "warning");
+    } else if (!validEmail) {
+      return Notification("Warning", "Invalid email!", "warning");
     } else {
       return true;
     }
@@ -63,32 +67,29 @@ export default function RegisterPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (handleValidation() === false) {
-      Notification("Warning", "All fields are required", "warning");
-    } else if (handleValidation() === "pass") {
-      Notification("Warning", "Password fields didn't match", "warning");
-    } else {
+    if (handleValidation()) {
       const information = {
         name: name,
         email: email,
         password: password,
       };
+      console.log(information);
       axios
-        .post("/api/v1/auth/signup", information)
+        .post("/auth/signup", information)
         .then((res) => {
           console.log(res.data.data);
-          const userId = res.data.data._id;
-          const name = res.data.data.name;
-          localStorage.setItem(
-            "login",
-            JSON.stringify({
-              login: true,
-              userId,
-              name,
-            })
-          );
-          history.push("/profile");
-          window.location.reload();
+          // const userId = res.data.data._id;
+          // const name = res.data.data.name;
+          // localStorage.setItem(
+          //   "login",
+          //   JSON.stringify({
+          //     login: true,
+          //     userId,
+          //     name,
+          //   })
+          // );
+          // history.push("/profile");
+          // window.location.reload();
         })
         .then((err) => {
           console.log(err);
@@ -149,7 +150,7 @@ export default function RegisterPage() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link to="/signin" variant="body2">
+              <Link to="/login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
