@@ -5,6 +5,7 @@ import authorizedUser from "./src/middlewares/authorizedUser";
 import SignUp from "./src/services/Auth/SignUp";
 import SignIn from "./src/services/Auth/SignIn";
 import Users from "./src/services/Admin/Users";
+import Emails from "./src/services/Emails/Emails";
 import GlobalErrorHandler from "./src/utils/errors/GlobalErrorHandler";
 import cors from "cors";
 import AppError from "./src/utils/errors/AppError";
@@ -29,6 +30,9 @@ app.use("/api/auth/signin", new SignIn());
 
 // Admin
 app.use("/api/users", authorizedUser, new Users());
+
+// Email
+app.use("/api/emails", authorizedUser, new Emails());
 
 // Docs
 app.use("/docs", (req, res) => {
