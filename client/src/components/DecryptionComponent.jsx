@@ -4,6 +4,11 @@ import AttachmentIcon from "@material-ui/icons/Attachment";
 import { makeStyles } from "@material-ui/core/styles";
 import Notification from "../components/Notification";
 import axios from "axios";
+import FileSaver from "file-saver";
+import {
+  checkCrypt,
+  decrypt,
+} from '../utils/handleFiles';
 
 const useStyles = makeStyles((theme) => ({
   fileInput: {
@@ -37,16 +42,23 @@ function DecryptionComponent() {
     setFile({ filePath: selectedFile, fileName: selectedFile.name });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!handleValidation()) {
       Notification("Warning", "All fields are required!", "warning");
     } else {
-      console.log(decryptionKey);
-      console.log(filePath);
-      //   axios.post('http://localhost:5000/encrypt-file', {file: filePath, key: decryptionKey});
+      const CheckCrypt = await checkCrypt(filePath);
+      if (CheckCrypt) {
+        const decrypteData = await decrypt(filePath, decryptionKey);
+        if (decrypteData.error) {
+          console.log('Wrong secret')
+        } else {
+          FileSaver.saveAs(decrypteData.file, decrypteData.name);
+        }
+      } else {
+        console.log('Provide ecvrypted file')
+      }
     }
-    console.log(e);
   };
   return (
     <div>
