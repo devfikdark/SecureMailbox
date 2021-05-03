@@ -2,14 +2,9 @@ import React, { useState } from "react";
 import { Button, Container, Grid, TextField } from "@material-ui/core";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import { makeStyles } from "@material-ui/core/styles";
-import Notification from "../components/Notification";
-import axios from "axios";
+import Notification from "./Notification";
 import FileSaver from "file-saver";
-import {
-  encrypt,
-  fileToData,
-  checkCrypt,
-} from '../utils/handleFiles';
+import { encrypt, fileToData, checkCrypt } from "../utils/handleFiles";
 
 const useStyles = makeStyles((theme) => ({
   fileInput: {
@@ -32,7 +27,7 @@ function EncryptionComponent() {
   const classes = useStyles();
 
   const handleValidation = () => {
-    if (file.fileName === "" || encryptionKey === "") {
+    if (fileName === "" || encryptionKey === "") {
       return false;
     } else {
       return true;
@@ -50,11 +45,14 @@ function EncryptionComponent() {
     } else {
       const CheckCrypt = await checkCrypt(filePath);
       if (CheckCrypt) {
-        console.log('Provide normal file')
+        Notification("Warning", "Provide valid file for encryption", "warning");
       } else {
         const FileToData = await fileToData(filePath);
-        const encrypteData = await encrypt(FileToData, filePath.name, encryptionKey, 'hints');
-        FileSaver.saveAs(encrypteData.file, encrypteData.name);
+        const encryptedData = await encrypt(FileToData, filePath.name, encryptionKey, "hints");
+        FileSaver.saveAs(encryptedData.file, encryptedData.name);
+        Notification("Success", "Your file is encrypted successfully", "success");
+        setEncryptionKey("");
+        setFile({ fileName: "" });
       }
     }
   };

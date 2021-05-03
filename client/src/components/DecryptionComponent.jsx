@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Container, Grid, TextField } from "@material-ui/core";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import { makeStyles } from "@material-ui/core/styles";
-import Notification from "../components/Notification";
+import Notification from "./Notification";
 import FileSaver from "file-saver";
 import { checkCrypt, decrypt } from "../utils/handleFiles";
 
@@ -45,14 +45,17 @@ function DecryptionComponent() {
     } else {
       const CheckCrypt = await checkCrypt(filePath);
       if (CheckCrypt) {
-        const decrypteData = await decrypt(filePath, decryptionKey);
-        if (decrypteData.error) {
-          console.log("Wrong secret");
+        const decryptedData = await decrypt(filePath, decryptionKey);
+        if (decryptedData.error) {
+          Notification("Error", "Invalid secret key", "error");
         } else {
-          FileSaver.saveAs(decrypteData.file, decrypteData.name);
+          FileSaver.saveAs(decryptedData.file, decryptedData.name);
+          Notification("Success", "Your file is decrypted successfully", "success");
+          setDecryptionKey("");
+          setFile({ fileName: "" });
         }
       } else {
-        console.log("Provide ecvrypted file");
+        Notification("Warning", "Provide encrypted file only!", "warning");
       }
     }
   };
