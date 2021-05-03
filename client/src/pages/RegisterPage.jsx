@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Avatar, Grid, Typography, Container, CssBaseline, TextField, Button } from "@material-ui/core";
+import { Avatar, Grid, Typography, Container, CssBaseline, TextField, Button, CircularProgress } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { deepPurple } from "@material-ui/core/colors";
 import { Link, useHistory } from "react-router-dom";
@@ -32,13 +32,24 @@ const useStyles = makeStyles((theme) => ({
   inputStyle: {
     color: deepPurple[400],
   },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 export default function RegisterPage() {
   const classes = useStyles();
   const history = useHistory();
   // STATES
-
+  const [loading, setLoading] = useState(false);
   const [signUpForm, setSignUpForm] = useState({
     name: "",
     email: "",
@@ -67,33 +78,41 @@ export default function RegisterPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     if (handleValidation()) {
       const information = {
-        name: name,
+        fullName: name,
         email: email,
         password: password,
+        role: "User",
       };
       console.log(information);
       axios
         .post("/auth/signup", information)
         .then((res) => {
-          console.log(res.data.data);
-          // const userId = res.data.data._id;
-          // const name = res.data.data.name;
-          // localStorage.setItem(
-          //   "login",
-          //   JSON.stringify({
-          //     login: true,
-          //     userId,
-          //     name,
-          //   })
-          // );
-          // history.push("/profile");
-          // window.location.reload();
+          console.log(res);
+          Notification("Congratulations", "Your account is created successfully", "success");
+          history.push("/login");
         })
-        .then((err) => {
+        .catch((err) => {
           console.log(err);
-        });
+        })
+        .finally(() => setLoading(false));
+
+      // axios
+      //   .post("/auth/signup", information)
+      //   .then((res) => {
+      //     console.log(res);
+      //     Notification("Congratulations", "Your account is created successfully", "success");
+      //     history.push("/login");
+      //   })
+      //   .catch((err) => {
+      //     if (err.response.data.message) {
+      //       Notification("Error", `${err.response.data.message}`, "error");
+      //     } else {
+      //       Notification("Error", "Something went wrong. Please check your internet connection", "error");
+      //     }
+      //   });
     }
   };
 
@@ -145,9 +164,12 @@ export default function RegisterPage() {
               />
             </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-            Sign Up
-          </Button>
+          <div className={classes.wrapper}>
+            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={loading}>
+              Sign Up
+            </Button>
+            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          </div>
           <Grid container justify="flex-end">
             <Grid item>
               <Link to="/login" variant="body2">
