@@ -1,11 +1,15 @@
-import User from '../../models/User'
+import Email from '../../models/Email'
 import sendData from '../../utils/response/sendData';
 
 class Emails {
   async find () {
-    const userInfo = await User.find();
+    const emailInfo = await Email.find();
     
-    return sendData('ok', userInfo);
+    return sendData('ok', emailInfo);
+  }
+
+  async create (body) {
+    console.log(body)
   }
 }
 

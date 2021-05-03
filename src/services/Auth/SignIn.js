@@ -23,6 +23,7 @@ class SignIn {
     return sendData('ok', {
       fullName: userInfo.fullName,
       email: userInfo.email,
+      role: userInfo.role,
       token: createJWT(userInfo._id),
     });
   }
