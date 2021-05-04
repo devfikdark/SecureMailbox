@@ -4,6 +4,7 @@ import socketio from "@feathersjs/socketio";
 import authorizedUser from "./src/middlewares/authorizedUser";
 import SignUp from "./src/services/Auth/SignUp";
 import SignIn from "./src/services/Auth/SignIn";
+import LogOut from "./src/services/Auth/LogOut";
 import Users from "./src/services/Admin/Users";
 import Emails from "./src/services/Emails/Emails";
 import GlobalErrorHandler from "./src/utils/errors/GlobalErrorHandler";
@@ -27,12 +28,15 @@ app.configure(express.rest());
 // Auth
 app.use("/api/auth/signup", new SignUp());
 app.use("/api/auth/signin", new SignIn());
+app.use("/api/auth/logout", new LogOut());
 
 // Admin
 app.use("/api/users", authorizedUser, new Users());
 
 // Email
 app.use("/api/emails", authorizedUser, new Emails());
+
+// Chats
 
 // Docs
 app.use("/docs", (req, res) => {
