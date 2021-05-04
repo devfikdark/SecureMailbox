@@ -46,7 +46,8 @@ function ChatListComponent() {
         console.log(res);
         if (res.data.status === "ok") {
           console.log(res.data.data);
-          const filteredUsers = res.data.data.filter((el) => el.role !== "admin");
+          const currentUser = localStorage.getItem("email");
+          const filteredUsers = res.data.data.filter((el) => el.role !== "admin" && el.email !== currentUser);
           setUsers([...filteredUsers].reverse());
         } else {
           Notification("Error", `${res.data.message}`, "error");
