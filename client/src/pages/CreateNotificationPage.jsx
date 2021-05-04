@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Box, Button, Container, Grid, TextField, Typography } from "@material-ui/core";
 import Notification from "../components/Notification";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 function CreateNotificationPage() {
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ title: "", details: "" });
   const { title, details } = notification;
@@ -37,11 +39,14 @@ function CreateNotificationPage() {
         .then((res) => {
           if (res.data.status === "ok") {
             Notification("Success", "Notification sent successfully", "success");
+            setNotification({ title: "", detail: "" });
+            history.push("/notification-list");
           } else {
             Notification("Error", `${res.data.message}`, "error");
           }
         })
-        .catch((err) => Notification("Error", "Your session has expired. Please login again", "error"));
+        .catch(() => Notification("Error", "Your session has expired. Please login again", "error"))
+        .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
