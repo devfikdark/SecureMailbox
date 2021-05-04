@@ -29,6 +29,7 @@ function App() {
             <Route exact path="/" component={RegisteredUserListPage} />
             <Route exact path="/user-list" component={RegisteredUserListPage} />
             <Route exact path="/create-notification" component={CreateNotificationPage} />
+            <Route exact path="/notification-list" component={NotificationListPage} />
           </>
         ) : (
           <>

@@ -111,6 +111,14 @@ function HeaderComponent() {
                 </Box>
 
                 <Box px={1}>
+                  <Link to="/notification-list">
+                    <Button color="inherit" startIcon={<NotificationsIcon />} className={classes.buttonStyle}>
+                      Notifications
+                    </Button>
+                  </Link>
+                </Box>
+
+                <Box px={1}>
                   <Button color="inherit" className={classes.buttonStyle} onClick={logout}>
                     Logout
                   </Button>
