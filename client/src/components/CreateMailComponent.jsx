@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Button, Card, CardContent, Container, Divider, Grid, List, ListItem, ListItemText, Paper, TextField, Typography } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { Box, Button, Card, CardContent, CircularProgress, Container, Divider, Grid, List, ListItem, ListItemText, TextField, Typography } from "@material-ui/core";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import Notification from "./Notification";
 import axios from "axios";
@@ -12,9 +12,26 @@ function CreateMailComponent() {
   });
   const [file, setFile] = useState({ selectedFile: "", filePath: "", fileName: "" });
   const [loading, setLoading] = useState(false);
+  const [registeredUsers, setRegisteredUsers] = useState([]);
+  const [userListLoading, setUserListLoading] = useState(false);
 
   const { selectedFile, filePath, fileName } = file;
   const { mailSubject, message, mailTo } = mailInformation;
+
+  useEffect(() => {
+    setUserListLoading(true);
+    axios
+      .get("/users", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res.data.data);
+        setRegisteredUsers(res.data.data);
+      })
+      .finally(() => setUserListLoading(false));
+  }, []);
 
   const handleChange = (e) => setMailInformation({ ...mailInformation, [e.target.name]: e.target.value });
 
@@ -85,19 +102,26 @@ function CreateMailComponent() {
       <Container maxWidth="lg">
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-            <Card variant="outlined" style={{ borderRadius: 10 }}>
-              <CardContent>
-                <Box display="flex" justifyContent="center">
+            {userListLoading ? (
+              <CircularProgress />
+            ) : registeredUsers.length === 0 ? (
+              <Typography variant="h5">No valid email found</Typography>
+            ) : (
+              <Card variant="outlined" style={{ borderRadius: 10 }}>
+                <Box display="flex" justifyContent="center" p={2}>
                   <Typography variant="h6">User Emails</Typography>
                 </Box>
-                <List>
-                  <ListItem>
-                    <ListItemText primary="haha" />
-                  </ListItem>
-                  <Divider />
-                </List>
-              </CardContent>
-            </Card>
+                <CardContent style={{ maxHeight: "50vh", overflow: "auto" }}>
+                  <List>
+                    {registeredUsers.map((el, i) => (
+                      <ListItem key={i + 1}>
+                        <ListItemText primary={el.email} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </CardContent>
+              </Card>
+            )}
           </Grid>
           <Grid item xs={12} sm={8}>
             <form onSubmit={handleSubmit}>
