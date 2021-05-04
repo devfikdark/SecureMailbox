@@ -18,52 +18,66 @@ function CreateMailComponent() {
 
   const handleChange = (e) => setMailInformation({ ...mailInformation, [e.target.name]: e.target.value });
 
+  const handleValidation = () => {
+    const validEmail = /.+@.+\..+/.test(mailTo);
+    if (mailTo === "" || mailSubject === "" || message === "" || filePath === "") {
+      return Notification("Warning", "All fields are required", "warning");
+    } else if (!validEmail) {
+      return Notification("Warning", "Email is not valid", "warning");
+    } else {
+      return true;
+    }
+  };
+
   const handleFileChange = (e) => {
     setFile({ selectedFile: e.target.files[0], fileName: e.target.files[0].name });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     // uploading file to cloudinary server
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    formData.append("upload_preset", "ml_default");
-    const options = {
-      method: "POST",
-      body: formData,
-    };
+    if (handleValidation()) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("upload_preset", "ml_default");
+      const options = {
+        method: "POST",
+        body: formData,
+      };
 
-    fetch("https://api.Cloudinary.com/v1_1/dck5ccwjv/raw/upload", options)
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-        setFile({ filePath: res.url });
-      })
-      .catch((err) => console.log(err));
+      const cloudInfo = await fetch("https://api.Cloudinary.com/v1_1/dck5ccwjv/raw/upload", options);
+      const cloudResponse = await cloudInfo.json();
 
-    const mailFrom = localStorage.getItem("email");
+      const mailFrom = localStorage.getItem("email");
 
-    axios
-      .post(
-        "/emails",
-        { subject: mailSubject, message: message, filePath: filePath, from: mailFrom, to: mailTo },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        if (res.data.status === "ok") {
-          Notification("Success", "Mail sent successfully", "success");
-        } else {
-          Notification("Error", `${res.data.message}`, "error");
-        }
-      })
-      .finally(() => setLoading(false));
+      axios
+        .post(
+          "/emails",
+          { subject: mailSubject, message: message, filePath: cloudResponse.url, from: mailFrom, to: mailTo },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          if (res.data.status === "ok") {
+            Notification("Success", "Mail sent successfully", "success");
+            setMailInformation({ mailSubject: "", mailTo: "", message: "" });
+            setFile({ fileName: "" });
+          } else {
+            Notification("Error", `${res.data.message}`, "error");
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
   };
 
   return (
@@ -105,7 +119,7 @@ function CreateMailComponent() {
               </Grid>
 
               <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>
-                Send
+                {loading ? "Sending" : "Send"}
               </Button>
             </form>
           </Grid>
