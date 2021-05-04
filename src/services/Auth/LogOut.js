@@ -1,10 +1,6 @@
-import jwt from 'jsonwebtoken';
-import { promisify } from 'util';
 import User from '../../models/User';
 import Token from '../../models/Token';
 import sendMessage from '../../utils/response/sendMessage';
-import AppError from '../../utils/errors/AppError';
-
 class LogOut {
   async create (body) {
 
