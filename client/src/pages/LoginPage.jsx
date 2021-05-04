@@ -84,8 +84,11 @@ export default function SignIn() {
             localStorage.setItem("email", res.data.data.email);
             localStorage.setItem("role", res.data.data.role);
             localStorage.setItem("token", res.data.data.token);
-
-            history.push("/mails");
+            if (res.data.role === "user") {
+              history.push("/mails");
+            } else {
+              history.push("/user-list");
+            }
             window.location.reload();
           } else {
             Notification("Error", `${res.data.message}`, "error");
