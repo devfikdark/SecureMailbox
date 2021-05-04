@@ -7,7 +7,12 @@ class Chats {
     if (!from) return sendMessage("fail", "Provide sending email");
     if (!to) return sendMessage("fail", "Provide receiving email");
 
-    const chatInfo = await Chat.find({ from, to });
+    const chatInfo = await Chat.find({
+      $or: [
+        { from, to },
+        { to: from, from: to }
+      ]
+    });
 
     for (let i = 0; i < chatInfo.length; i++) {
       if (chatInfo[i].from === from) {

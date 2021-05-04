@@ -129,6 +129,11 @@ function LiveChatPage() {
       } else {
         toEmail = response;
       }
+
+      if (localStorage.getItem("email") === toEmail) {
+        toEmail = response.data.from;
+      }
+
       const chatInfo = await app.service("chats").find({
         query: {
           from: localStorage.getItem("email"),
@@ -145,7 +150,6 @@ function LiveChatPage() {
         })
       );
       setData(resData);
-      console.log(resData);
     } catch (error) {}
   };
 
@@ -159,8 +163,6 @@ function LiveChatPage() {
     await app.service("chats").create(body);
     setMessage("");
   };
-
-  console.log(data);
 
   return (
     <div>
