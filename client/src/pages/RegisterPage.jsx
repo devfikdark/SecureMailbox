@@ -83,7 +83,7 @@ export default function RegisterPage() {
         fullName: name,
         email: email,
         password: password,
-        role: "User",
+        role: "user",
       };
       console.log(information);
       axios

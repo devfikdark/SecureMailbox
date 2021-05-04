@@ -81,9 +81,11 @@ export default function SignIn() {
           console.log(res);
           localStorage.setItem("name", res.data.data.fullName);
           localStorage.setItem("email", res.data.data.email);
+          localStorage.setItem("role", res.data.data.role);
           localStorage.setItem("token", res.data.data.token);
 
           history.push("/mails");
+          window.location.reload();
         })
         .catch((err) => {
           console.log(err);
