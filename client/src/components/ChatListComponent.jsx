@@ -1,6 +1,7 @@
-import React from "react";
-import { Avatar, List, ListItem, Badge, ListItemAvatar, ListItemText, Card, CardContent, Typography, Box } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Avatar, List, ListItem, Badge, ListItemAvatar, ListItemText, Card, CardContent, Typography, Box, CircularProgress } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import axios from "axios";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -31,6 +32,29 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 function ChatListComponent() {
+  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/users", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.status === "ok") {
+          console.log(res.data.data);
+          const filteredUsers = res.data.data.filter((el) => el.role !== "admin");
+          setUsers([...filteredUsers].reverse());
+        } else {
+          Notification("Error", `${res.data.message}`, "error");
+        }
+      })
+      .catch(() => Notification("Error", "Your session has expired. Please login again", "error"))
+      .finally(() => setLoading(false));
+  }, []);
   return (
     <div>
       <Card variant="outlined">
@@ -38,21 +62,40 @@ function ChatListComponent() {
           <Box display="flex" justifyContent="center">
             <Typography variant="h6">Chat List</Typography>
           </Box>
-          <List>
-            <ListItem button>
-              <ListItemAvatar>
-                <StyledBadge
-                  overlap="circle"
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  variant="dot">
-                  <Avatar />
-                </StyledBadge>
-              </ListItemAvatar>
-              <ListItemText primary="haha" />
-            </ListItem>
+          <List style={{ maxHeight: "50vh", overflow: "auto" }}>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <>
+                {users.map((el) => (
+                  <>
+                    {el.status ? (
+                      <ListItem button key={el._id}>
+                        <ListItemAvatar>
+                          <StyledBadge
+                            overlap="circle"
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "right",
+                            }}
+                            variant="dot">
+                            <Avatar />
+                          </StyledBadge>
+                        </ListItemAvatar>
+                        <ListItemText primary={el.fullName} />
+                      </ListItem>
+                    ) : (
+                      <ListItem button key={el._id}>
+                        <ListItemAvatar>
+                          <Avatar />
+                        </ListItemAvatar>
+                        <ListItemText primary={el.fullName} />
+                      </ListItem>
+                    )}
+                  </>
+                ))}
+              </>
+            )}
           </List>
         </CardContent>
       </Card>
