@@ -18,7 +18,6 @@ function App() {
       <Switch>
         {localStorage.getItem("token") && localStorage.getItem("role") === "user" ? (
           <>
-            <Route exact path="/" component={MailPage} />
             <Route exact path="/mails" component={MailPage} />
             <Route exact path="/secure-file" component={ConversionPage} />
             <Route exact path="/live-chat" component={LiveChatPage} />
@@ -32,6 +31,7 @@ function App() {
           </>
         ) : (
           <>
+            <Route exact path="/" component={LoginPage} />
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/register" component={RegisterPage} />
           </>

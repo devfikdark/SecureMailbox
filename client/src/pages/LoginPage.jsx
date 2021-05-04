@@ -52,7 +52,7 @@ export default function SignIn() {
   const history = useHistory();
 
   // STATES
-
+  const [loading, setLoading] = useState(false);
   const [signInInfo, setSignInInfo] = useState({
     email: "",
     password: "",
@@ -74,23 +74,26 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     if (handleValidation()) {
       axios
         .post("/auth/signin", { email: email, password: password })
         .then((res) => {
-          console.log(res);
-          localStorage.setItem("name", res.data.data.fullName);
-          localStorage.setItem("email", res.data.data.email);
-          localStorage.setItem("role", res.data.data.role);
-          localStorage.setItem("token", res.data.data.token);
+          if (res.data.status === "ok") {
+            localStorage.setItem("name", res.data.data.fullName);
+            localStorage.setItem("email", res.data.data.email);
+            localStorage.setItem("role", res.data.data.role);
+            localStorage.setItem("token", res.data.data.token);
 
-          history.push("/mails");
-          window.location.reload();
+            history.push("/mails");
+            window.location.reload();
+          } else {
+            Notification("Error", `${res.data.message}`, "error");
+          }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .finally(() => setLoading(false));
     } else {
+      setLoading(false);
     }
   };
 
@@ -121,7 +124,7 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={loading}>
               Sign In
             </Button>
             <Grid container>
