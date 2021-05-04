@@ -70,7 +70,7 @@ function MailListComponent() {
                 <ListItemText
                   primary={<Typography variant="subtitle1">{el.subject}</Typography>}
                   secondary={
-                    <Typography variant="body2" style={{ color: "#696969", width: "50vw" }}>
+                    <Typography variant="body2" style={{ color: "#696969", width: "50em" }}>
                       {el.message}
                     </Typography>
                   }
