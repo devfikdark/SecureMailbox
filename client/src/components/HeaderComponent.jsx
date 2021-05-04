@@ -95,17 +95,17 @@ function HeaderComponent() {
             ) : localStorage.getItem("token") && localStorage.getItem("role") === "admin" ? (
               <>
                 <Box px={1}>
-                  <Link to="/create-notification">
-                    <Button color="inherit" startIcon={<AddAlertIcon />} className={classes.buttonStyle}>
-                      Create Notification
+                  <Link to="/user-list">
+                    <Button color="inherit" startIcon={<PeopleIcon />} className={classes.buttonStyle}>
+                      User List
                     </Button>
                   </Link>
                 </Box>
 
                 <Box px={1}>
-                  <Link to="/user-list">
-                    <Button color="inherit" startIcon={<PeopleIcon />} className={classes.buttonStyle}>
-                      User List
+                  <Link to="/create-notification">
+                    <Button color="inherit" startIcon={<AddAlertIcon />} className={classes.buttonStyle}>
+                      Create Notification
                     </Button>
                   </Link>
                 </Box>

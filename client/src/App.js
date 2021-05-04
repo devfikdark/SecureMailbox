@@ -18,6 +18,7 @@ function App() {
       <Switch>
         {localStorage.getItem("token") && localStorage.getItem("role") === "user" ? (
           <>
+            <Route exact path="/" component={MailPage} />
             <Route exact path="/mails" component={MailPage} />
             <Route exact path="/secure-file" component={ConversionPage} />
             <Route exact path="/live-chat" component={LiveChatPage} />
@@ -25,9 +26,9 @@ function App() {
           </>
         ) : localStorage.getItem("token") && localStorage.getItem("role") === "admin" ? (
           <>
-            <Route exact path="/create-notification" component={CreateNotificationPage} />
+            <Route exact path="/" component={RegisteredUserListPage} />
             <Route exact path="/user-list" component={RegisteredUserListPage} />
-            <Route render={() => <h1>What the fuck are you doing here?</h1>} />
+            <Route exact path="/create-notification" component={CreateNotificationPage} />
           </>
         ) : (
           <>
