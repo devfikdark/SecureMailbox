@@ -23,6 +23,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 import app from "../utils/features";
 import axios from "axios";
+import e from "cors";
 
 const useStyles = makeStyles((theme) => ({
   messages: {
@@ -91,6 +92,7 @@ function LiveChatPage() {
   const [selectedUser, setSelectedUser] = useState("");
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -101,9 +103,7 @@ function LiveChatPage() {
         },
       })
       .then((res) => {
-        console.log(res);
         if (res.data.status === "ok") {
-          console.log(res.data.data);
           const currentUser = localStorage.getItem("email");
           const filteredUsers = res.data.data.filter((el) => el.role !== "admin" && el.email !== currentUser);
           setUsers([...filteredUsers].reverse());
@@ -117,25 +117,35 @@ function LiveChatPage() {
 
   const handleListItemClick = async (email) => {
     setSelectedUser(email);
-    fetchData(localStorage.getItem("email"), email);
-    await app.service("chats").on("created", fetchData(localStorage.getItem("email"), email));
+    await fetchData(email);
+    await app.service("chats").on("created", fetchData);
   };
 
-  const fetchData = async (from, to) => {
+  const fetchData = async (response) => {
     try {
-      const ideas = await app.service("chats").find({ query: { from, to } });
-      console.log(from, to);
-      console.log(ideas);
+      let toEmail;
+      if (response.data) {
+        toEmail = response.data.to;
+      } else {
+        toEmail = response;
+      }
+      const chatInfo = await app.service("chats").find(
+        { 
+          query: { 
+            from: localStorage.getItem("email"),
+            to: toEmail
+          } 
+        });
 
-      // const resData = [];
-      // ideas.map((el, idx) =>
-      //   resData.push({
-      //     key: idx,
-      //     ...el,
-      //   })
-      // );
-
-      // setData(resData);
+      const resData = [];
+      chatInfo.data.map(el =>
+        resData.push({
+          key: el._id,
+          message: el.message,
+          type: el.type,
+        })
+      );
+      setData(resData);
     } catch (error) {}
   };
 
@@ -148,6 +158,8 @@ function LiveChatPage() {
     await app.service("chats").create(body);
     setMessage("");
   };
+
+  console.log(data)
 
   return (
     <div>
