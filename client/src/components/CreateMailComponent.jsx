@@ -123,6 +123,7 @@ function CreateMailComponent() {
               </Card>
             )}
           </Grid>
+
           <Grid item xs={12} sm={8}>
             <form onSubmit={handleSubmit}>
               <Grid item xs={12} style={{ marginBottom: 20 }}>
