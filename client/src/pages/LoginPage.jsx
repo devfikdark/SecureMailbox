@@ -84,7 +84,7 @@ export default function SignIn() {
             localStorage.setItem("email", res.data.data.email);
             localStorage.setItem("role", res.data.data.role);
             localStorage.setItem("token", res.data.data.token);
-            if (res.data.role === "user") {
+            if (res.data.data.role === "user") {
               history.push("/mails");
             } else {
               history.push("/user-list");
