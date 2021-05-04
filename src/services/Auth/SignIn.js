@@ -20,6 +20,9 @@ class SignIn {
       return sendMessage('fail', 'Incorrect username or password.');
     }
 
+    userInfo.status = true;
+    await userInfo.save();
+
     return sendData('ok', {
       fullName: userInfo.fullName,
       email: userInfo.email,
