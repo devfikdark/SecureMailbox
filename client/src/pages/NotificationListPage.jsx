@@ -18,9 +18,9 @@ function NotificationListPage() {
   const [notificationList, setNotificationList] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(true);
-    await axios
+    axios
       .get("/notifications", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),

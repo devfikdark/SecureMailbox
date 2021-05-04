@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, Container, CssBaseline, Grid, Paper, Tab, Tabs, Typography } from "@material-ui/core";
+import { Paper, Tab, Tabs } from "@material-ui/core";
 import MailListComponent from "../components/MailListComponent";
 import TabPanelComponent from "../components/TabPanelComponent";
 import CreateMailComponent from "../components/CreateMailComponent";

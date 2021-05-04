@@ -23,11 +23,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 import app from "../utils/features";
 import axios from "axios";
-import e from "cors";
 
 const useStyles = makeStyles((theme) => ({
   messages: {
-    height: "57vh",
+    height: "56vh",
+    overflow: "auto",
     backgroundColor: "",
   },
   receivedMessage: {
@@ -129,16 +129,15 @@ function LiveChatPage() {
       } else {
         toEmail = response;
       }
-      const chatInfo = await app.service("chats").find(
-        { 
-          query: { 
-            from: localStorage.getItem("email"),
-            to: toEmail
-          } 
-        });
+      const chatInfo = await app.service("chats").find({
+        query: {
+          from: localStorage.getItem("email"),
+          to: toEmail,
+        },
+      });
 
       const resData = [];
-      chatInfo.data.map(el =>
+      chatInfo.data.map((el) =>
         resData.push({
           key: el._id,
           message: el.message,
@@ -146,10 +145,12 @@ function LiveChatPage() {
         })
       );
       setData(resData);
+      console.log(resData);
     } catch (error) {}
   };
 
-  const sendMessage = async () => {
+  const sendMessage = async (e) => {
+    e.preventDefault();
     const body = {
       message,
       from: localStorage.getItem("email"),
@@ -159,7 +160,7 @@ function LiveChatPage() {
     setMessage("");
   };
 
-  console.log(data)
+  console.log(data);
 
   return (
     <div>
@@ -221,18 +222,25 @@ function LiveChatPage() {
                   <Typography>Username</Typography>
                 </Box>
                 <Box className={classes.messages}>
-                  <Box display="flex" justifyContent="flex-start" className={classes.receivedMessage} mb={1}>
+                  {data.map((el) => (
+                    <Box display="flex" justifyContent={el.type === "Send" ? "flex-end" : "flex-start"} className={el.type === "Send" ? classes.sentMessage : classes.receivedMessage} mb={1}>
+                      {el.message}
+                    </Box>
+                  ))}
+                  {/* <Box display="flex" justifyContent="flex-start" className={classes.receivedMessage} mb={1}>
                     hello there, how are you? hello there, how are you? hello there, how are you? hello there, how are you? hello there, how are you? hello there, how are you? hello there, how are
                     you? hello there, how are you?
                   </Box>
                   <Box display="flex" justifyContent="flex-end" className={classes.sentMessage} mb={1}>
                     I am fine. how is it going?
-                  </Box>
+                  </Box> */}
                 </Box>
-                <TextField variant="outlined" placeholder="Type your message" className={classes.messageField} value={message} name="message" onChange={(e) => setMessage(e.target.value)} />
-                <IconButton className={classes.messageButton} color="secondary" onClick={sendMessage}>
-                  <SendIcon />
-                </IconButton>
+                <form onSubmit={sendMessage}>
+                  <TextField variant="outlined" placeholder="Type your message" className={classes.messageField} value={message} name="message" onChange={(e) => setMessage(e.target.value)} />
+                  <IconButton type="submit" className={classes.messageButton} color="secondary">
+                    <SendIcon />
+                  </IconButton>
+                </form>
               </CardContent>
             </Card>
           </Grid>
