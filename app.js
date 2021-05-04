@@ -8,6 +8,7 @@ import LogOut from "./src/services/Auth/LogOut";
 import Users from "./src/services/Admin/Users";
 import Emails from "./src/services/Emails/Emails";
 import Chats from "./src/services/Chats/Chats";
+import Notifications from "./src/services/Notifications/Notifications";
 import GlobalErrorHandler from "./src/utils/errors/GlobalErrorHandler";
 import cors from "cors";
 import AppError from "./src/utils/errors/AppError";
@@ -39,6 +40,9 @@ app.use("/api/emails", authorizedUser, new Emails());
 
 // Chats
 app.use("/api/chats", authorizedUser, new Chats());
+
+// Notification
+app.use("/api/notifications", authorizedUser, new Notifications());
 
 // Docs
 app.use("/docs", (req, res) => {
