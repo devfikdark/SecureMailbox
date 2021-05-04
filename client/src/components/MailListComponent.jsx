@@ -1,9 +1,9 @@
-import React from "react";
-import { Avatar, Chip, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Typography } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+import React, { useEffect, useState } from "react";
+import { Avatar, Chip, Divider, List, ListItem, ListItemAvatar, ListItemText } from "@material-ui/core";
 import MailIcon from "@material-ui/icons/Mail";
 import { makeStyles } from "@material-ui/core/styles";
 import { green, pink } from "@material-ui/core/colors";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,30 +25,43 @@ const useStyles = makeStyles((theme) => ({
 function MailListComponent() {
   const classes = useStyles();
 
+  const [mailList, setMailList] = useState([]);
+
+  useEffect(() => {
+    const currentEmail = localStorage.getItem("email");
+    axios
+      .get(`/emails/${currentEmail}`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res.data.data);
+        setMailList(res.data.data);
+      });
+  }, []);
+
   const listClicked = () => {
     console.log("list item clicked");
   };
-  const deleteClicked = () => {
-    console.log("Delete clicked");
-  };
+
   return (
     <div>
       <List>
-        <ListItem button onClick={listClicked}>
-          <ListItemAvatar>
-            <Avatar className={classes.green}>
-              <MailIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Single-line item" secondary={"I'll be in your neighborhood doing errands this…"} />
-          <Chip variant="outlined" size="small" label="Sent" />
-          <ListItemSecondaryAction onClick={deleteClicked}>
-            <IconButton edge="end" aria-label="delete">
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Divider variant="inset" component="li" />
+        {mailList.map((el, i) => (
+          <>
+            <ListItem button onClick={listClicked} key={i + 1}>
+              <ListItemAvatar>
+                <Avatar className={classes.green}>
+                  <MailIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={el.subject} secondary={el.message} />
+              <Chip variant="outlined" size="small" label={el.type === "Send" ? "Sent" : "Received"} />
+            </ListItem>
+            <Divider variant="inset" component="li" />
+          </>
+        ))}
       </List>
     </div>
   );
