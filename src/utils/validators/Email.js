@@ -1,13 +1,17 @@
 const emailValidator = (body) => {
   const {
-    fullName,
-    email,
-    password,
+    subject,
+    filePath,
+    message,
+    from,
+    to,
   } = body;
 
-  if (!fullName) return 'Provide your name.';
-  if (!email) return 'Provide your email.';
-  if (!password) return 'Provide your password.';
+  if (!subject) return 'Provide email subject.';
+  if (!filePath) return 'Provide email filePath.';
+  if (!message) return 'Provide email body.';
+  if (!from) return 'Provide sender email.';
+  if (!to) return 'Provide receiver email.';
   return 'ok';
 };
 

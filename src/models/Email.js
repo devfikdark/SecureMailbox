@@ -4,7 +4,7 @@ const EmailSchema = new mongoose.Schema({
   subject: {
     type: String,
   },
-  body: {
+  message: {
     type: String,
   },
   filePath: {
