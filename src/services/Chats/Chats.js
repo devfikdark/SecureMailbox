@@ -4,7 +4,6 @@ import sendData from "../../utils/response/sendData";
 class Chats {
   async find(data) {
     const { from, to } = data.query;
-    console.log(from, to);
     if (!from) return sendMessage("fail", "Provide sending email");
     if (!to) return sendMessage("fail", "Provide receiving email");
 
