@@ -7,11 +7,6 @@ import FileSaver from "file-saver";
 import { encrypt, fileToData, checkCrypt } from "../utils/handleFiles";
 
 const useStyles = makeStyles((theme) => ({
-  fileInput: {
-    padding: "20px",
-    border: "none",
-    outlined: "none",
-  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
