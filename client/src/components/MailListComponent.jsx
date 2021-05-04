@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, Chip, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from "@material-ui/core";
+import { Avatar, Box, Chip, CircularProgress, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from "@material-ui/core";
 import MailIcon from "@material-ui/icons/Mail";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { makeStyles } from "@material-ui/core/styles";
+import Notification from "./Notification";
 import { green, pink } from "@material-ui/core/colors";
 import moment from "moment";
 import axios from "axios";
@@ -28,8 +29,10 @@ function MailListComponent() {
   const classes = useStyles();
 
   const [mailList, setMailList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     const currentEmail = localStorage.getItem("email");
     axios
       .get(`/emails/${currentEmail}`, {
@@ -38,47 +41,62 @@ function MailListComponent() {
         },
       })
       .then((res) => {
-        console.log(res.data.data);
-        setMailList(res.data.data);
-      });
+        if (res.data.status === "ok") {
+          setMailList(res.data.data);
+        } else {
+          Notification("Error", `${res.data.message}`, "error");
+        }
+      })
+      .catch(() => Notification("Error", "Your session has expired. Please login again", "error"))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
     <div>
-      <List>
-        {mailList.map((el) => (
-          <>
-            <ListItem key={el._id}>
-              <ListItemAvatar>
-                <Avatar className={classes.green}>
-                  <MailIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={<Typography variant="subtitle1">{el.subject}</Typography>}
-                secondary={
-                  <Typography variant="body2" style={{ color: "#696969", width: "50vw" }}>
-                    {el.message}
-                  </Typography>
-                }
-              />
+      {loading ? (
+        <Box display="flex" justifyContent="center">
+          <CircularProgress />
+        </Box>
+      ) : mailList.length !== 0 ? (
+        <List>
+          {mailList.map((el) => (
+            <>
+              <ListItem key={el._id}>
+                <ListItemAvatar>
+                  <Avatar className={classes.green}>
+                    <MailIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={<Typography variant="subtitle1">{el.subject}</Typography>}
+                  secondary={
+                    <Typography variant="body2" style={{ color: "#696969", width: "50vw" }}>
+                      {el.message}
+                    </Typography>
+                  }
+                />
 
-              <Divider orientation="vertical" />
+                <Divider orientation="vertical" />
 
-              <Chip variant="outlined" size="small" label={el.type === "Send" ? "Sent" : "Received"} color={el.type === "Send" ? "secondary" : "primary"} />
-              <Box px={2}>
-                <Chip label={moment(el.createAt).fromNow()} />
-              </Box>
-              <Tooltip title="Download file">
-                <IconButton aria-label="download" href={el.filePath} target="_blank">
-                  <ArrowDownwardIcon fontSize="inherit" />
-                </IconButton>
-              </Tooltip>
-            </ListItem>
-            <Divider variant="inset" component="li" />
-          </>
-        ))}
-      </List>
+                <Chip variant="outlined" size="small" label={el.type === "Send" ? "Sent" : "Received"} color={el.type === "Send" ? "secondary" : "primary"} />
+                <Box px={2}>
+                  <Chip label={moment(el.createAt).fromNow()} />
+                </Box>
+                <Tooltip title="Download file">
+                  <IconButton aria-label="download" href={el.filePath} target="_blank">
+                    <ArrowDownwardIcon fontSize="inherit" />
+                  </IconButton>
+                </Tooltip>
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </>
+          ))}
+        </List>
+      ) : (
+        <Box display="flex" justifyContent="center">
+          <Typography variant="h3">Mail not available</Typography>
+        </Box>
+      )}
     </div>
   );
 }

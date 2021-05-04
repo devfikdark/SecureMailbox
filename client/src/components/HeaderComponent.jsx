@@ -9,6 +9,7 @@ import TextsmsIcon from "@material-ui/icons/Textsms";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import SecurityIcon from "@material-ui/icons/Security";
 import { Link, useHistory } from "react-router-dom";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,12 +31,15 @@ function HeaderComponent() {
   const history = useHistory();
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("name");
-    localStorage.removeItem("email");
-    history.push("/login");
-    window.location.reload();
+    axios.post("/auth/logout", { token: localStorage.getItem("token"), email: localStorage.getItem("email") }).then((res) => {
+      if (res.data.status === "ok") {
+        localStorage.clear();
+        history.push("/login");
+        window.location.reload();
+      } else {
+        Notification("Error", "Something went wrong. Please check your internet connection", "error");
+      }
+    });
   };
   return (
     <div>
