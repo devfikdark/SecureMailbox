@@ -39,7 +39,7 @@ app.use("/api/users", authorizedUser, new Users());
 app.use("/api/emails", authorizedUser, new Emails());
 
 // Chats
-app.use("/api/chats", authorizedUser, new Chats());
+app.use("/chats", authorizedUser, new Chats());
 
 // Notification
 app.use("/api/notifications", authorizedUser, new Notifications());
