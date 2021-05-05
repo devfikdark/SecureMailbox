@@ -42,7 +42,7 @@ function MailListComponent() {
       })
       .then((res) => {
         if (res.data.status === "ok") {
-          setMailList(res.data.data);
+          setMailList([...res.data.data].reverse());
         } else {
           Notification("Error", `${res.data.message}`, "error");
         }
