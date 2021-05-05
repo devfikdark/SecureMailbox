@@ -130,7 +130,7 @@ export default function RegisterPage() {
           </Grid>
           <div className={classes.wrapper}>
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={loading}>
-              Sign Up
+              Register
             </Button>
             {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
           </div>
