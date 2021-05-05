@@ -169,7 +169,7 @@ function LiveChatPage() {
     const body = {
       message,
       from: localStorage.getItem("email"),
-      to: selectedUser,
+      to: userEmail,
     };
     await app.service("chats").create(body);
     setMessage("");
