@@ -147,16 +147,16 @@ function LiveChatPage() {
   }, []);
 
   const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   // second use effect to scroll functionality
   useEffect(scrollToBottom, [data]);
 
   const handleListItemClick = async (item) => {
-    console.log(item);
     setSelectedUser({ userEmail: item.email, userName: item.fullName });
-    console.log(item.email, item.fullName);
     await fetchData(item.email);
     await app.service("chats").on("created", fetchData);
   };
