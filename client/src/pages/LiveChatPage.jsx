@@ -30,10 +30,19 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
     backgroundColor: "",
   },
+  sent: {
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  received: {
+    display: "flex",
+    justifyContent: "flex-start",
+  },
   receivedMessage: {
     padding: 10,
     borderRadius: 15,
     backgroundColor: deepPurple[50],
+    width: "20em",
   },
   sentMessage: {
     padding: 10,
@@ -225,17 +234,12 @@ function LiveChatPage() {
                 </Box>
                 <Box className={classes.messages}>
                   {data.map((el) => (
-                    <Box display="flex" justifyContent={el.type === "Send" ? "flex-end" : "flex-start"} className={el.type === "Send" ? classes.sentMessage : classes.receivedMessage} mb={1}>
-                      {el.message}
-                    </Box>
+                    <div className={el.type === "Send" ? classes.sent : classes.received}>
+                      <Box display="flex" justifyContent={el.type === "Send" ? "flex-end" : "flex-start"} className={el.type === "Send" ? classes.sentMessage : classes.receivedMessage} mb={1}>
+                        {el.message}
+                      </Box>
+                    </div>
                   ))}
-                  {/* <Box display="flex" justifyContent="flex-start" className={classes.receivedMessage} mb={1}>
-                    hello there, how are you? hello there, how are you? hello there, how are you? hello there, how are you? hello there, how are you? hello there, how are you? hello there, how are
-                    you? hello there, how are you?
-                  </Box>
-                  <Box display="flex" justifyContent="flex-end" className={classes.sentMessage} mb={1}>
-                    I am fine. how is it going?
-                  </Box> */}
                 </Box>
                 <form onSubmit={sendMessage}>
                   <TextField variant="outlined" placeholder="Type your message" className={classes.messageField} value={message} name="message" onChange={(e) => setMessage(e.target.value)} />
