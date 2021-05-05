@@ -10,8 +10,8 @@ class Chats {
     const chatInfo = await Chat.find({
       $or: [
         { from, to },
-        { to: from, from: to }
-      ]
+        { to: from, from: to },
+      ],
     });
 
     for (let i = 0; i < chatInfo.length; i++) {

@@ -100,6 +100,8 @@ export default function RegisterPage() {
           setLoading(false);
           setSignUpForm({ name: "", email: "", password: "", confirmPassword: "" });
         });
+    } else {
+      setLoading(false);
     }
   };
 

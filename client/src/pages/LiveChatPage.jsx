@@ -17,11 +17,12 @@ import {
   ListItemText,
   CircularProgress,
 } from "@material-ui/core";
-import { deepPurple, blue } from "@material-ui/core/colors";
+import { deepPurple, blue, grey } from "@material-ui/core/colors";
 import SendIcon from "@material-ui/icons/Send";
 import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 import app from "../utils/features";
+import moment from "moment";
 import axios from "axios";
 
 const useStyles = makeStyles(() => ({
@@ -33,19 +34,35 @@ const useStyles = makeStyles(() => ({
   sent: {
     display: "flex",
     justifyContent: "flex-end",
+    position: "relative",
+  },
+  sentMsgTime: {
+    position: "absolute",
+    right: 0,
+    bottom: -10,
+    color: grey[700],
   },
   received: {
     display: "flex",
     justifyContent: "flex-start",
+    position: "relative",
+  },
+  receivedMsgTime: {
+    position: "absolute",
+    left: 0,
+    bottom: -10,
+    color: grey[700],
   },
   receivedMessage: {
     padding: 10,
     borderRadius: 15,
+    maxWidth: "20em",
     backgroundColor: deepPurple[50],
   },
   sentMessage: {
     padding: 10,
     borderRadius: 15,
+    maxWidth: "20em",
     backgroundColor: blue[50],
   },
   card: {
@@ -158,8 +175,10 @@ function LiveChatPage() {
           key: el._id,
           message: el.message,
           type: el.type,
+          createAt: el.createAt,
         })
       );
+      console.log(resData);
       setData(resData);
     } catch (error) {}
   };
@@ -250,6 +269,9 @@ function LiveChatPage() {
                       <Box display="flex" justifyContent={el.type === "Send" ? "flex-end" : "flex-start"} className={el.type === "Send" ? classes.sentMessage : classes.receivedMessage} mb={1}>
                         {el.message}
                       </Box>
+                      <Typography variant="caption" className={el.type === "Send" ? classes.sentMsgTime : classes.receivedMsgTime}>
+                        {moment(el.createAt).fromNow()}
+                      </Typography>
                     </div>
                   ))}
                 </Box>
