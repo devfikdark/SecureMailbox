@@ -16,15 +16,28 @@ function App() {
     <div className="App">
       <HeaderComponent />
       <Switch>
-        <Route exact path="/" component={MailPage} />
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/register" component={RegisterPage} />
-        <Route exact path="/mails" component={MailPage} />
-        <Route exact path="/secure-file" component={ConversionPage} />
-        <Route exact path="/live-chat" component={LiveChatPage} />
-        <Route exact path="/notification-list" component={NotificationListPage} />
-        <Route exact path="/create-notification" component={CreateNotificationPage} />
-        <Route exact path="/user-list" component={RegisteredUserListPage} />
+        {localStorage.getItem("token") && localStorage.getItem("role") === "user" ? (
+          <>
+            <Route exact path="/" component={MailPage} />
+            <Route exact path="/mails" component={MailPage} />
+            <Route exact path="/secure-file" component={ConversionPage} />
+            <Route exact path="/live-chat" component={LiveChatPage} />
+            <Route exact path="/notification-list" component={NotificationListPage} />
+          </>
+        ) : localStorage.getItem("token") && localStorage.getItem("role") === "admin" ? (
+          <>
+            <Route exact path="/" component={RegisteredUserListPage} />
+            <Route exact path="/user-list" component={RegisteredUserListPage} />
+            <Route exact path="/create-notification" component={CreateNotificationPage} />
+            <Route exact path="/notification-list" component={NotificationListPage} />
+          </>
+        ) : (
+          <>
+            <Route exact path="/" component={LoginPage} />
+            <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/register" component={RegisterPage} />
+          </>
+        )}
       </Switch>
       <NotificationContainer />
     </div>

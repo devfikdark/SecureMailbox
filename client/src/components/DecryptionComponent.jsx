@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Button, Container, Grid, TextField } from "@material-ui/core";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import { makeStyles } from "@material-ui/core/styles";
-import Notification from "../components/Notification";
-import axios from "axios";
+import Notification from "./Notification";
+import FileSaver from "file-saver";
+import { checkCrypt, decrypt } from "../utils/handleFiles";
 
 const useStyles = makeStyles((theme) => ({
   fileInput: {
@@ -37,16 +38,26 @@ function DecryptionComponent() {
     setFile({ filePath: selectedFile, fileName: selectedFile.name });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!handleValidation()) {
       Notification("Warning", "All fields are required!", "warning");
     } else {
-      console.log(decryptionKey);
-      console.log(filePath);
-      //   axios.post('http://localhost:5000/encrypt-file', {file: filePath, key: decryptionKey});
+      const CheckCrypt = await checkCrypt(filePath);
+      if (CheckCrypt) {
+        const decryptedData = await decrypt(filePath, decryptionKey);
+        if (decryptedData.error) {
+          Notification("Error", "Invalid secret key", "error");
+        } else {
+          FileSaver.saveAs(decryptedData.file, decryptedData.name);
+          Notification("Success", "Your file is decrypted successfully", "success");
+          setDecryptionKey("");
+          setFile({ fileName: "" });
+        }
+      } else {
+        Notification("Warning", "Provide encrypted file only!", "warning");
+      }
     }
-    console.log(e);
   };
   return (
     <div>

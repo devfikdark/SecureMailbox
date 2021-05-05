@@ -1,9 +1,12 @@
-import React from "react";
-import { Avatar, Chip, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Typography } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+import React, { useEffect, useState } from "react";
+import { Avatar, Box, Chip, CircularProgress, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from "@material-ui/core";
 import MailIcon from "@material-ui/icons/Mail";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { makeStyles } from "@material-ui/core/styles";
+import Notification from "./Notification";
 import { green, pink } from "@material-ui/core/colors";
+import moment from "moment";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,31 +28,75 @@ const useStyles = makeStyles((theme) => ({
 function MailListComponent() {
   const classes = useStyles();
 
-  const listClicked = () => {
-    console.log("list item clicked");
-  };
-  const deleteClicked = () => {
-    console.log("Delete clicked");
-  };
+  const [mailList, setMailList] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const currentEmail = localStorage.getItem("email");
+    axios
+      .get(`/emails/${currentEmail}`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        if (res.data.status === "ok") {
+          setMailList(res.data.data);
+        } else {
+          Notification("Error", `${res.data.message}`, "error");
+        }
+      })
+      .catch(() => Notification("Error", "Your session has expired. Please login again", "error"))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div>
-      <List>
-        <ListItem button onClick={listClicked}>
-          <ListItemAvatar>
-            <Avatar className={classes.green}>
-              <MailIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Single-line item" secondary={"I'll be in your neighborhood doing errands this…"} />
-          <Chip variant="outlined" size="small" label="Sent" />
-          <ListItemSecondaryAction onClick={deleteClicked}>
-            <IconButton edge="end" aria-label="delete">
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Divider variant="inset" component="li" />
-      </List>
+      {loading ? (
+        <Box display="flex" justifyContent="center">
+          <CircularProgress />
+        </Box>
+      ) : mailList.length !== 0 ? (
+        <List>
+          {mailList.map((el) => (
+            <>
+              <ListItem key={el._id}>
+                <ListItemAvatar>
+                  <Avatar className={classes.green}>
+                    <MailIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={<Typography variant="subtitle1">{el.subject}</Typography>}
+                  secondary={
+                    <Typography variant="body2" style={{ color: "#696969", width: "50em" }}>
+                      {el.message}
+                    </Typography>
+                  }
+                />
+
+                <Divider orientation="vertical" />
+
+                <Chip variant="outlined" size="small" label={el.type === "Send" ? "Sent" : "Received"} color={el.type === "Send" ? "secondary" : "primary"} />
+                <Box px={2}>
+                  <Chip label={moment(el.createAt).fromNow()} />
+                </Box>
+                <Tooltip title="Download file">
+                  <IconButton aria-label="download" href={el.filePath} target="_blank">
+                    <ArrowDownwardIcon fontSize="inherit" />
+                  </IconButton>
+                </Tooltip>
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </>
+          ))}
+        </List>
+      ) : (
+        <Box display="flex" justifyContent="center">
+          <Typography variant="h3">Mail not available</Typography>
+        </Box>
+      )}
     </div>
   );
 }

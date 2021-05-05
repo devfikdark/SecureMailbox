@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Avatar, Grid, Typography, Container, Checkbox, CssBaseline, TextField, Button, FormControlLabel } from "@material-ui/core";
+import { Avatar, Grid, Typography, Container, CssBaseline, TextField, Button, CircularProgress } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { deepPurple } from "@material-ui/core/colors";
 import { Link, useHistory } from "react-router-dom";
@@ -24,21 +24,31 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    backgroundColor: deepPurple[700],
+    backgroundColor: deepPurple[800],
     "&:hover": {
       backgroundColor: deepPurple[900],
     },
   },
-  inputStyle: {
-    color: deepPurple[400],
+
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
   },
 }));
 
 export default function RegisterPage() {
   const classes = useStyles();
   const history = useHistory();
-  // STATES
 
+  // STATES
+  const [loading, setLoading] = useState(false);
   const [signUpForm, setSignUpForm] = useState({
     name: "",
     email: "",
@@ -49,10 +59,14 @@ export default function RegisterPage() {
 
   // METHODS
   const handleValidation = () => {
+    const validEmail = /.+@.+\..+/.test(email);
+
     if (name === "" || email === "" || password === "" || confirmPassword === "") {
-      return false;
+      return Notification("Warning", "All fields are required", "warning");
     } else if (password !== confirmPassword) {
-      return "pass";
+      return Notification("Warning", "Password didn't match!", "warning");
+    } else if (!validEmail) {
+      return Notification("Warning", "Invalid email!", "warning");
     } else {
       return true;
     }
@@ -63,35 +77,28 @@ export default function RegisterPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (handleValidation() === false) {
-      Notification("Warning", "All fields are required", "warning");
-    } else if (handleValidation() === "pass") {
-      Notification("Warning", "Password fields didn't match", "warning");
-    } else {
+    setLoading(true);
+    if (handleValidation()) {
       const information = {
-        name: name,
+        fullName: name,
         email: email,
         password: password,
+        role: "user",
       };
+      console.log(information);
       axios
-        .post("/api/v1/auth/signup", information)
+        .post("/auth/signup", information)
         .then((res) => {
-          console.log(res.data.data);
-          const userId = res.data.data._id;
-          const name = res.data.data.name;
-          localStorage.setItem(
-            "login",
-            JSON.stringify({
-              login: true,
-              userId,
-              name,
-            })
-          );
-          history.push("/profile");
-          window.location.reload();
+          if (res.data.status === "ok") {
+            Notification("Congratulations", "Your account is created successfully", "success");
+            history.push("/login");
+          } else {
+            Notification("Error", `${res.data.message}`, "error");
+          }
         })
-        .then((err) => {
-          console.log(err);
+        .finally(() => {
+          setLoading(false);
+          setSignUpForm({ name: "", email: "", password: "", confirmPassword: "" });
         });
     }
   };
@@ -109,47 +116,27 @@ export default function RegisterPage() {
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField autoComplete="name" name="name" value={name} onChange={handleChange} variant="outlined" required fullWidth id="name" label="First Name" autoFocus />
+              <TextField autoFocus name="name" value={name} onChange={handleChange} variant="outlined" required fullWidth label="First Name" />
             </Grid>
             <Grid item xs={12}>
-              <TextField variant="outlined" required fullWidth id="email" label="Email Address" name="email" value={email} onChange={handleChange} autoComplete="email" />
+              <TextField variant="outlined" required fullWidth label="Email Address" name="email" value={email} onChange={handleChange} />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                value={password}
-                onChange={handleChange}
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
+              <TextField variant="outlined" required fullWidth name="password" value={password} onChange={handleChange} label="Password" type="password" />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="confirmPassword"
-                value={confirmPassword}
-                onChange={handleChange}
-                label="Confirm Password"
-                type="password"
-                id="password2"
-                autoComplete="current-password"
-                className={classes.inputStyle}
-              />
+              <TextField variant="outlined" required fullWidth name="confirmPassword" value={confirmPassword} onChange={handleChange} label="Confirm Password" type="password" />
             </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-            Sign Up
-          </Button>
+          <div className={classes.wrapper}>
+            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={loading}>
+              Sign Up
+            </Button>
+            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          </div>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link to="/signin" variant="body2">
+              <Link to="/login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>

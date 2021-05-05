@@ -3,12 +3,13 @@ import { AppBar, Toolbar, Typography, Button, Box, Hidden, IconButton } from "@m
 import { makeStyles } from "@material-ui/core/styles";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import AddAlertIcon from "@material-ui/icons/AddAlert";
-import PeopleIcon from "@material-ui/icons/People";
 import MenuIcon from "@material-ui/icons/Menu";
+import PeopleIcon from "@material-ui/icons/People";
 import TextsmsIcon from "@material-ui/icons/Textsms";
+import AddAlertIcon from "@material-ui/icons/AddAlert";
 import SecurityIcon from "@material-ui/icons/Security";
 import { Link, useHistory } from "react-router-dom";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,6 +28,19 @@ const useStyles = makeStyles((theme) => ({
 
 function HeaderComponent() {
   const classes = useStyles();
+  const history = useHistory();
+
+  const logout = () => {
+    axios.post("/auth/logout", { token: localStorage.getItem("token"), email: localStorage.getItem("email") }).then((res) => {
+      if (res.data.status === "ok") {
+        localStorage.clear();
+        history.push("/login");
+        window.location.reload();
+      } else {
+        Notification("Error", "Something went wrong. Please check your internet connection", "error");
+      }
+    });
+  };
   return (
     <div>
       <AppBar position="static" color="transparent">
@@ -42,75 +56,97 @@ function HeaderComponent() {
           </Typography>
 
           <Hidden mdDown>
-            <Box px={1}>
-              <Link to="/mails">
-                <Button color="inherit" startIcon={<MailIcon />} className={classes.buttonStyle}>
-                  Mail
-                </Button>
-              </Link>
-            </Box>
+            {localStorage.getItem("token") && localStorage.getItem("role") === "user" ? (
+              <>
+                <Box px={1}>
+                  <Link to="/mails">
+                    <Button color="inherit" startIcon={<MailIcon />} className={classes.buttonStyle}>
+                      Mail
+                    </Button>
+                  </Link>
+                </Box>
 
-            <Box px={1}>
-              <Link to="/live-chat">
-                <Button color="inherit" startIcon={<TextsmsIcon />} className={classes.buttonStyle}>
-                  Live Chat
-                </Button>
-              </Link>
-            </Box>
+                <Box px={1}>
+                  <Link to="/live-chat">
+                    <Button color="inherit" startIcon={<TextsmsIcon />} className={classes.buttonStyle}>
+                      Live Chat
+                    </Button>
+                  </Link>
+                </Box>
 
-            <Box px={1}>
-              <Link to="/secure-file">
-                <Button color="inherit" startIcon={<SecurityIcon />} className={classes.buttonStyle}>
-                  Encryption/ Decryption
-                </Button>
-              </Link>
-            </Box>
+                <Box px={1}>
+                  <Link to="/secure-file">
+                    <Button color="inherit" startIcon={<SecurityIcon />} className={classes.buttonStyle}>
+                      Encryption/ Decryption
+                    </Button>
+                  </Link>
+                </Box>
 
-            <Box px={1}>
-              <Link to="/notification-list">
-                <Button color="inherit" startIcon={<NotificationsIcon />} className={classes.buttonStyle}>
-                  Notifications
-                </Button>
-              </Link>
-            </Box>
+                <Box px={1}>
+                  <Link to="/notification-list">
+                    <Button color="inherit" startIcon={<NotificationsIcon />} className={classes.buttonStyle}>
+                      Notifications
+                    </Button>
+                  </Link>
+                </Box>
 
-            <Box px={1}>
-              <Link to="/create-notification">
-                <Button color="inherit" startIcon={<AddAlertIcon />} className={classes.buttonStyle}>
-                  Create Notification
-                </Button>
-              </Link>
-            </Box>
+                <Box px={1}>
+                  <Button color="inherit" className={classes.buttonStyle} onClick={logout}>
+                    Logout
+                  </Button>
+                </Box>
+              </>
+            ) : localStorage.getItem("token") && localStorage.getItem("role") === "admin" ? (
+              <>
+                <Box px={1}>
+                  <Link to="/user-list">
+                    <Button color="inherit" startIcon={<PeopleIcon />} className={classes.buttonStyle}>
+                      User List
+                    </Button>
+                  </Link>
+                </Box>
 
-            <Box px={1}>
-              <Link to="/user-list">
-                <Button color="inherit" startIcon={<PeopleIcon />} className={classes.buttonStyle}>
-                  User List
-                </Button>
-              </Link>
-            </Box>
+                <Box px={1}>
+                  <Link to="/create-notification">
+                    <Button color="inherit" startIcon={<AddAlertIcon />} className={classes.buttonStyle}>
+                      Create Notification
+                    </Button>
+                  </Link>
+                </Box>
 
-            <Box px={1}>
-              <Link to="/login">
-                <Button color="inherit" className={classes.buttonStyle}>
-                  Login
-                </Button>
-              </Link>
-            </Box>
+                <Box px={1}>
+                  <Link to="/notification-list">
+                    <Button color="inherit" startIcon={<NotificationsIcon />} className={classes.buttonStyle}>
+                      Notifications
+                    </Button>
+                  </Link>
+                </Box>
 
-            <Box px={1}>
-              <Link to="/register">
-                <Button color="inherit" className={classes.buttonStyle}>
-                  Register
-                </Button>
-              </Link>
-            </Box>
+                <Box px={1}>
+                  <Button color="inherit" className={classes.buttonStyle} onClick={logout}>
+                    Logout
+                  </Button>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box px={1}>
+                  <Link to="/login">
+                    <Button color="inherit" className={classes.buttonStyle}>
+                      Login
+                    </Button>
+                  </Link>
+                </Box>
 
-            <Box px={1}>
-              <Button color="inherit" className={classes.buttonStyle}>
-                Logout
-              </Button>
-            </Box>
+                <Box px={1}>
+                  <Link to="/register">
+                    <Button color="inherit" className={classes.buttonStyle}>
+                      Register
+                    </Button>
+                  </Link>
+                </Box>
+              </>
+            )}
           </Hidden>
         </Toolbar>
       </AppBar>

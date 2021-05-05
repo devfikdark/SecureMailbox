@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Box, Button, Container, Grid, TextField, Typography } from "@material-ui/core";
 import Notification from "../components/Notification";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 function CreateNotificationPage() {
+  const history = useHistory();
+  const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ title: "", details: "" });
   const { title, details } = notification;
 
@@ -12,7 +16,7 @@ function CreateNotificationPage() {
 
   const handleValidation = () => {
     if (title === "" || details === "") {
-      return false;
+      return Notification("Warning", "All fields are required", "warning");
     } else {
       return true;
     }
@@ -20,11 +24,31 @@ function CreateNotificationPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!handleValidation()) {
-      Notification("Warning", "All fields are require!", "warning");
+    setLoading(true);
+    if (handleValidation()) {
+      axios
+        .post(
+          "/notifications",
+          { subject: title, message: details },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          if (res.data.status === "ok") {
+            Notification("Success", "Notification sent successfully", "success");
+            setNotification({ title: "", detail: "" });
+            history.push("/notification-list");
+          } else {
+            Notification("Error", `${res.data.message}`, "error");
+          }
+        })
+        .catch(() => Notification("Error", "Your session has expired. Please login again", "error"))
+        .finally(() => setLoading(false));
     } else {
-      console.log(title);
-      console.log(details);
+      setLoading(false);
     }
   };
 
@@ -43,7 +67,7 @@ function CreateNotificationPage() {
           </Grid>
         </Grid>
         <Box mt={2}>
-          <Button type="submit" fullWidth variant="contained" color="primary">
+          <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>
             Create Notification
           </Button>
         </Box>

@@ -2,15 +2,11 @@ import React, { useState } from "react";
 import { Button, Container, Grid, TextField } from "@material-ui/core";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import { makeStyles } from "@material-ui/core/styles";
-import Notification from "../components/Notification";
-import axios from "axios";
+import Notification from "./Notification";
+import FileSaver from "file-saver";
+import { encrypt, fileToData, checkCrypt } from "../utils/handleFiles";
 
 const useStyles = makeStyles((theme) => ({
-  fileInput: {
-    padding: "20px",
-    border: "none",
-    outlined: "none",
-  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -26,7 +22,7 @@ function EncryptionComponent() {
   const classes = useStyles();
 
   const handleValidation = () => {
-    if (file.fileName === "" || encryptionKey === "") {
+    if (fileName === "" || encryptionKey === "") {
       return false;
     } else {
       return true;
@@ -37,26 +33,23 @@ function EncryptionComponent() {
     setFile({ filePath: selectedFile, fileName: selectedFile.name });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!handleValidation()) {
       Notification("Warning", "All fields are required!", "warning");
     } else {
-      console.log(encryptionKey);
-      console.log(filePath);
-      const formData = new FormData();
-      formData.append("file", filePath);
-      formData.append("upload_preset", "ml_default");
-      const options = { method: "POST", body: formData };
-      return fetch("https://api.Cloudinary.com/v1_1/dck5ccwjv/image/upload", options)
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
-      //   axios.post('http://localhost:5000/encrypt-file', {file: filePath, key: encryptionKey});
+      const CheckCrypt = await checkCrypt(filePath);
+      if (CheckCrypt) {
+        Notification("Warning", "Provide valid file for encryption", "warning");
+      } else {
+        const FileToData = await fileToData(filePath);
+        const encryptedData = await encrypt(FileToData, filePath.name, encryptionKey, "hints");
+        FileSaver.saveAs(encryptedData.file, encryptedData.name);
+        Notification("Success", "Your file is encrypted successfully", "success");
+        setEncryptionKey("");
+        setFile({ fileName: "" });
+      }
     }
-    console.log(e);
   };
   return (
     <div>
