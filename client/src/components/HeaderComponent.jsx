@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AppBar, Toolbar, Typography, Button, Box, Hidden, IconButton } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Button, Box, Hidden, IconButton, Menu, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
@@ -32,6 +32,15 @@ function HeaderComponent() {
   const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const logout = () => {
     setLoading(true);
@@ -53,9 +62,56 @@ function HeaderComponent() {
       <AppBar position="static" color="transparent">
         <Toolbar>
           <Hidden lgUp>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <IconButton aria-controls="simple-menu" aria-haspopup="true" edge="start" className={classes.menuButton} onClick={handleClick} color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton>
+
+            <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+              {localStorage.getItem("token") && localStorage.getItem("role") === "user" ? (
+                <>
+                  <Link to="/mails">
+                    <MenuItem onClick={handleClose}>Mail</MenuItem>
+                  </Link>
+                  <Link to="/secure-file">
+                    <MenuItem onClick={handleClose}>Encryption / Decryption</MenuItem>
+                  </Link>
+                  <Link to="/live-chat">
+                    <MenuItem onClick={handleClose}>Live Chat</MenuItem>
+                  </Link>
+                  <Link to="/notification-list">
+                    <MenuItem onClick={handleClose}>Notification List</MenuItem>
+                  </Link>
+
+                  <MenuItem onClick={logout} className={classes.buttonStyle}>
+                    Logout
+                  </MenuItem>
+                </>
+              ) : localStorage.getItem("token") && localStorage.getItem("role") === "admin" ? (
+                <>
+                  <Link to="/user-list">
+                    <MenuItem onClick={handleClose}>Registered Users</MenuItem>
+                  </Link>
+                  <Link to="/create-notification">
+                    <MenuItem onClick={handleClose}>Create Notification</MenuItem>
+                  </Link>
+                  <Link to="/notification-list">
+                    <MenuItem onClick={handleClose}>Notification List</MenuItem>
+                  </Link>
+                  <MenuItem onClick={logout} className={classes.buttonStyle}>
+                    Logout
+                  </MenuItem>
+                </>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <MenuItem onClick={handleClose}>Login</MenuItem>
+                  </Link>
+                  <Link to="/register">
+                    <MenuItem onClick={handleClose}>Register</MenuItem>
+                  </Link>
+                </>
+              )}
+            </Menu>
           </Hidden>
 
           <Typography variant="h6" className={classes.title}>
