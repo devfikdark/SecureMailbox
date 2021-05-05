@@ -276,27 +276,35 @@ function LiveChatPage() {
                   </Box>
                 )}
                 <Box className={classes.messages}>
-                  {data.map((el) => (
+                  {data.length > 0 ? (
                     <>
-                      <div className={el.type === "Send" ? classes.sent : classes.received} key={el.key}>
-                        <Box
-                          display="flex"
-                          justifyContent={el.type === "Send" ? "flex-end" : "flex-start"}
-                          className={el.type === "Send" ? classes.sentMessage : classes.receivedMessage}
-                          mb={1}
-                          onMouseEnter={() => setShowTime(true)}
-                          onMouseLeave={() => setShowTime(false)}>
-                          {el.message}
-                        </Box>
-                        {showTime && (
-                          <Typography variant="caption" className={el.type === "Send" ? classes.sentMsgTime : classes.receivedMsgTime}>
-                            {moment(el.createAt).fromNow()}
-                          </Typography>
-                        )}
-                      </div>
-                      <div ref={messagesEndRef} />
+                      {data.map((el) => (
+                        <>
+                          <div className={el.type === "Send" ? classes.sent : classes.received} key={el.key}>
+                            <Box
+                              display="flex"
+                              justifyContent={el.type === "Send" ? "flex-end" : "flex-start"}
+                              className={el.type === "Send" ? classes.sentMessage : classes.receivedMessage}
+                              mb={1}
+                              onMouseEnter={() => setShowTime(true)}
+                              onMouseLeave={() => setShowTime(false)}>
+                              {el.message}
+                            </Box>
+                            {showTime && (
+                              <Typography variant="caption" className={el.type === "Send" ? classes.sentMsgTime : classes.receivedMsgTime}>
+                                {moment(el.createAt).fromNow()}
+                              </Typography>
+                            )}
+                          </div>
+                          <div ref={messagesEndRef} />
+                        </>
+                      ))}
                     </>
-                  ))}
+                  ) : (
+                    <Box display="flex" justifyContent="center">
+                      <Typography>Message Not Found. Start Chatting</Typography>
+                    </Box>
+                  )}
                 </Box>
                 <form onSubmit={sendMessage}>
                   <TextField variant="outlined" placeholder="Type your message" className={classes.messageField} value={message} name="message" onChange={(e) => setMessage(e.target.value)} />
