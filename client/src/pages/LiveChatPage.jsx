@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Container,
   CssBaseline,
@@ -34,6 +34,7 @@ const useStyles = makeStyles(() => ({
   sent: {
     display: "flex",
     justifyContent: "flex-end",
+    marginBottom: 10,
     position: "relative",
   },
   sentMsgTime: {
@@ -45,6 +46,7 @@ const useStyles = makeStyles(() => ({
   received: {
     display: "flex",
     justifyContent: "flex-start",
+    marginBottom: 10,
     position: "relative",
   },
   receivedMsgTime: {
@@ -112,13 +114,16 @@ const StyledBadge = withStyles((theme) => ({
 
 function LiveChatPage() {
   const classes = useStyles();
+  const messagesEndRef = useRef(null);
 
   const [message, setMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState({ userEmail: "", userName: "" });
   const { userEmail, userName } = selectedUser;
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
-  const [data, setData] = useState([]);
+  // CHANGED USE STATE TO INITIALLY 0
+  const [data, setData] = useState([0]);
+  const [showTime, setShowTime] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -140,6 +145,13 @@ function LiveChatPage() {
       .catch(() => Notification("Error", "Your session has expired. Please login again", "error"))
       .finally(() => setLoading(false));
   }, []);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // second use effect to scroll functionality
+  useEffect(scrollToBottom, [data]);
 
   const handleListItemClick = async (item) => {
     console.log(item);
@@ -178,8 +190,8 @@ function LiveChatPage() {
           createAt: el.createAt,
         })
       );
-      console.log(resData);
-      setData(resData);
+      // IF DATA IS NOT AVAILABLE THEN SET 0
+      setData(resData || 0);
     } catch (error) {}
   };
 
@@ -265,14 +277,25 @@ function LiveChatPage() {
                 )}
                 <Box className={classes.messages}>
                   {data.map((el) => (
-                    <div className={el.type === "Send" ? classes.sent : classes.received}>
-                      <Box display="flex" justifyContent={el.type === "Send" ? "flex-end" : "flex-start"} className={el.type === "Send" ? classes.sentMessage : classes.receivedMessage} mb={1}>
-                        {el.message}
-                      </Box>
-                      <Typography variant="caption" className={el.type === "Send" ? classes.sentMsgTime : classes.receivedMsgTime}>
-                        {moment(el.createAt).fromNow()}
-                      </Typography>
-                    </div>
+                    <>
+                      <div className={el.type === "Send" ? classes.sent : classes.received} key={el.key}>
+                        <Box
+                          display="flex"
+                          justifyContent={el.type === "Send" ? "flex-end" : "flex-start"}
+                          className={el.type === "Send" ? classes.sentMessage : classes.receivedMessage}
+                          mb={1}
+                          onMouseEnter={() => setShowTime(true)}
+                          onMouseLeave={() => setShowTime(false)}>
+                          {el.message}
+                        </Box>
+                        {showTime && (
+                          <Typography variant="caption" className={el.type === "Send" ? classes.sentMsgTime : classes.receivedMsgTime}>
+                            {moment(el.createAt).fromNow()}
+                          </Typography>
+                        )}
+                      </div>
+                      <div ref={messagesEndRef} />
+                    </>
                   ))}
                 </Box>
                 <form onSubmit={sendMessage}>
