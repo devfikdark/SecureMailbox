@@ -49,7 +49,7 @@ function NotificationListPage() {
           <Box display="flex" justifyContent="center">
             <CircularProgress />
           </Box>
-        ) : (
+        ) : notificationList.length !== 0 ? (
           <>
             {notificationList.map((el) => (
               <Box display="flex" justifyContent="flex-start" className={classes.notificationPanel} p={2} mb={1} key={el._id}>
@@ -65,6 +65,10 @@ function NotificationListPage() {
               </Box>
             ))}
           </>
+        ) : (
+          <Box display="flex" justifyContent="center">
+            <Typography variant="h3"> Notification list is empty </Typography>
+          </Box>
         )}
       </Container>
     </div>

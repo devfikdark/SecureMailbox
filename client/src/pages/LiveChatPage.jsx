@@ -24,7 +24,7 @@ import { withStyles } from "@material-ui/core/styles";
 import app from "../utils/features";
 import axios from "axios";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   messages: {
     height: "56vh",
     overflow: "auto",
@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
     borderRadius: 15,
     backgroundColor: deepPurple[50],
-    width: "20em",
   },
   sentMessage: {
     padding: 10,
@@ -98,7 +97,8 @@ function LiveChatPage() {
   const classes = useStyles();
 
   const [message, setMessage] = useState("");
-  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedUser, setSelectedUser] = useState({ userEmail: "", userName: "" });
+  const { userEmail, userName } = selectedUser;
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [data, setData] = useState([]);
@@ -124,9 +124,11 @@ function LiveChatPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleListItemClick = async (email) => {
-    setSelectedUser(email);
-    await fetchData(email);
+  const handleListItemClick = async (item) => {
+    console.log(item);
+    setSelectedUser({ userEmail: item.email, userName: item.fullName });
+    console.log(item.email, item.fullName);
+    await fetchData(item.email);
     await app.service("chats").on("created", fetchData);
   };
 
@@ -195,7 +197,7 @@ function LiveChatPage() {
                       {users.map((el) => (
                         <>
                           {el.status ? (
-                            <ListItem button key={el._id} onClick={() => handleListItemClick(el.email)}>
+                            <ListItem button key={el._id} onClick={() => handleListItemClick(el)}>
                               <ListItemAvatar>
                                 <StyledBadge
                                   overlap="circle"
@@ -210,7 +212,7 @@ function LiveChatPage() {
                               <ListItemText primary={el.fullName} />
                             </ListItem>
                           ) : (
-                            <ListItem button key={el._id} onClick={() => handleListItemClick(el.email)}>
+                            <ListItem button key={el._id} onClick={() => handleListItemClick(el)}>
                               <ListItemAvatar>
                                 <Avatar />
                               </ListItemAvatar>
@@ -229,9 +231,19 @@ function LiveChatPage() {
           <Grid item xs={12} sm={8}>
             <Card style={{ height: "70vh" }} className={classes.card}>
               <CardContent>
-                <Box display="flex" justifyContent="center" mb={4}>
-                  <Typography>Username</Typography>
-                </Box>
+                {userName ? (
+                  <Box display="flex" justifyContent="flex-start" mb={4}>
+                    <Typography style={{ color: "#1b5e20" }}>
+                      Chat with <span style={{ fontWeight: "bold" }}>{userName}</span>
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box display="flex" justifyContent="center">
+                    <Typography variant="h5" style={{ color: "#d84315" }}>
+                      Please select a user for conversation
+                    </Typography>
+                  </Box>
+                )}
                 <Box className={classes.messages}>
                   {data.map((el) => (
                     <div className={el.type === "Send" ? classes.sent : classes.received}>
