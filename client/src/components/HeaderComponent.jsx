@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { AppBar, Toolbar, Typography, Button, Box, Hidden, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MailIcon from "@material-ui/icons/Mail";
@@ -8,6 +8,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import TextsmsIcon from "@material-ui/icons/Textsms";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import SecurityIcon from "@material-ui/icons/Security";
+import { purple } from "@material-ui/core/colors";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
@@ -23,23 +24,29 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonStyle: {
     textTransform: "capitalize",
+    color: purple[500],
   },
 }));
 
 function HeaderComponent() {
   const classes = useStyles();
   const history = useHistory();
+  const [loading, setLoading] = useState(false);
 
   const logout = () => {
-    axios.post("/auth/logout", { token: localStorage.getItem("token"), email: localStorage.getItem("email") }).then((res) => {
-      if (res.data.status === "ok") {
-        localStorage.clear();
-        history.push("/login");
-        window.location.reload();
-      } else {
-        Notification("Error", "Something went wrong. Please check your internet connection", "error");
-      }
-    });
+    setLoading(true);
+    axios
+      .post("/auth/logout", { token: localStorage.getItem("token"), email: localStorage.getItem("email") })
+      .then((res) => {
+        if (res.data.status === "ok") {
+          localStorage.clear();
+          history.push("/login");
+          window.location.reload();
+        } else {
+          Notification("Error", "Something went wrong. Please check your internet connection", "error");
+        }
+      })
+      .finally(() => setLoading(false));
   };
   return (
     <div>
@@ -91,8 +98,8 @@ function HeaderComponent() {
                 </Box>
 
                 <Box px={1}>
-                  <Button color="inherit" className={classes.buttonStyle} onClick={logout}>
-                    Logout
+                  <Button color="inherit" className={classes.buttonStyle} onClick={logout} disabled={loading}>
+                    Logout as {localStorage.getItem("name")}
                   </Button>
                 </Box>
               </>
@@ -123,8 +130,8 @@ function HeaderComponent() {
                 </Box>
 
                 <Box px={1}>
-                  <Button color="inherit" className={classes.buttonStyle} onClick={logout}>
-                    Logout
+                  <Button color="inherit" className={classes.buttonStyle} onClick={logout} disabled={loading}>
+                    Logout as {localStorage.getItem("name")}
                   </Button>
                 </Box>
               </>

@@ -128,7 +128,7 @@ export default function SignIn() {
               autoComplete="current-password"
             />
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={loading}>
-              Sign In
+              Log In
             </Button>
             <Grid container>
               <Grid item>
