@@ -121,8 +121,7 @@ function LiveChatPage() {
   const { userEmail, userName } = selectedUser;
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
-  // CHANGED USE STATE TO INITIALLY 0
-  const [data, setData] = useState([0]);
+  const [data, setData] = useState([]);
   const [showTime, setShowTime] = useState(false);
 
   useEffect(() => {
@@ -190,8 +189,7 @@ function LiveChatPage() {
           createAt: el.createAt,
         })
       );
-      // IF DATA IS NOT AVAILABLE THEN SET 0
-      setData(resData || 0);
+      setData(resData);
     } catch (error) {}
   };
 
