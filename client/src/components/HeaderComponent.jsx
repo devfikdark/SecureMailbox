@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { AppBar, Toolbar, Typography, Button, Box, Hidden, IconButton, Menu, MenuItem } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Button, Box, Hidden, IconButton, Menu, MenuItem, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MenuIcon from "@material-ui/icons/Menu";
 import PeopleIcon from "@material-ui/icons/People";
 import TextsmsIcon from "@material-ui/icons/Textsms";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SecurityIcon from "@material-ui/icons/Security";
 import { purple } from "@material-ui/core/colors";
 import { Link, useHistory } from "react-router-dom";
@@ -27,12 +29,32 @@ const useStyles = makeStyles((theme) => ({
     color: purple[500],
   },
 }));
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    right: -3,
+    top: 5,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}))(Badge);
+
+const options = ["Show some love to Material-UI", "Show all notification content", "Hide sensitive notification content", "Hide all notification content"];
 
 function HeaderComponent() {
   const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [notificationEl, setNotificationEl] = useState(null);
+
+  const handleNotificationClick = (event) => {
+    console.log("clicked");
+    setNotificationEl(event.currentTarget);
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationEl(null);
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -79,7 +101,7 @@ function HeaderComponent() {
                     <MenuItem onClick={handleClose}>Live Chat</MenuItem>
                   </Link>
                   <Link to="/notification-list">
-                    <MenuItem onClick={handleClose}>Notification List</MenuItem>
+                    <MenuItem onClick={handleClose}>Admin Alert</MenuItem>
                   </Link>
 
                   <MenuItem onClick={logout} className={classes.buttonStyle}>
@@ -147,10 +169,25 @@ function HeaderComponent() {
 
                 <Box px={1}>
                   <Link to="/notification-list">
-                    <Button color="inherit" startIcon={<NotificationsIcon />} className={classes.buttonStyle}>
-                      Notifications
+                    <Button color="inherit" startIcon={<AccountCircleIcon />} className={classes.buttonStyle}>
+                      Admin Alert
                     </Button>
                   </Link>
+                </Box>
+
+                <Box px={1}>
+                  <IconButton color="primary" aria-label="notification" aria-controls="long-menu" aria-haspopup="true" onClick={handleNotificationClick}>
+                    <StyledBadge badgeContent={4} color="secondary">
+                      <NotificationsIcon />
+                    </StyledBadge>
+                  </IconButton>
+                  <Menu id="long-menu" anchorEl={notificationEl} keepMounted open={Boolean(notificationEl)} onClose={handleNotificationClose}>
+                    {options.map((option) => (
+                      <MenuItem key={option} selected={option === "Pyxis"} onClick={handleNotificationClose}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Menu>
                 </Box>
 
                 <Box px={1}>
