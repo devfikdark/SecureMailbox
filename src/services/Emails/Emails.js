@@ -53,6 +53,20 @@ class Emails {
 
     return sendData('ok', createEmailInfo);
   }
+
+  async patch (id, body, params) {
+
+    const emailInfo = await Email.findByIdAndUpdate(
+      id,
+      body, {
+        new: true,
+        runValidators: true,
+      },
+    );
+    if (!emailInfo) return sendMessage("fail", 'Somthing went wrong');
+
+    return sendMessage("ok", 'Email seen')
+  }
 }
 
 export default Emails;

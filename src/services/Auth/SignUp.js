@@ -4,7 +4,7 @@ import userValidator from "../../utils/validators/User";
 
 class SignUp {
   async create(body) {
-    const { fullName, email, password, role } = body;
+    const { fullName, email, password, answer, role } = body;
 
     // body verification
     const message = userValidator(body);
@@ -17,6 +17,7 @@ class SignUp {
     const userInfo = await User.create({
       fullName,
       email,
+      answer,
       role,
       createAt: Date.now(),
     });
