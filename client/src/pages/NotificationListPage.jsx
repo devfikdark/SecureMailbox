@@ -43,7 +43,7 @@ function NotificationListPage() {
     <div>
       <Container maxWidth="md">
         <Box my={4} display="flex" justifyContent="center">
-          <Typography variant="h4">Notification List</Typography>
+          <Typography variant="h4">Admin Message</Typography>
         </Box>
         {loading ? (
           <Box display="flex" justifyContent="center">

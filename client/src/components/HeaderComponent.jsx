@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppBar, Toolbar, Typography, Button, Box, Hidden, IconButton, Menu, MenuItem, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
@@ -38,14 +38,31 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
-const options = ["Show some love to Material-UI", "Show all notification content", "Hide sensitive notification content", "Hide all notification content"];
-
 function HeaderComponent() {
   const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationEl, setNotificationEl] = useState(null);
+
+  const [alert, setAlert] = useState({ email: 0, message: 0, totalCount: 0 });
+  const { email, message, totalCount } = alert;
+
+  useEffect(() => {
+    axios
+      .get(`/alert/${localStorage.getItem("email")}`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setAlert({ email: res.data.data.email, message: res.data.data.message, totalCount: res.data.data.email + res.data.data.message });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const handleNotificationClick = (event) => {
     console.log("clicked");
@@ -177,16 +194,13 @@ function HeaderComponent() {
 
                 <Box px={1}>
                   <IconButton color="primary" aria-label="notification" aria-controls="long-menu" aria-haspopup="true" onClick={handleNotificationClick}>
-                    <StyledBadge badgeContent={4} color="secondary">
+                    <StyledBadge badgeContent={totalCount} color="secondary">
                       <NotificationsIcon />
                     </StyledBadge>
                   </IconButton>
                   <Menu id="long-menu" anchorEl={notificationEl} keepMounted open={Boolean(notificationEl)} onClose={handleNotificationClose}>
-                    {options.map((option) => (
-                      <MenuItem key={option} selected={option === "Pyxis"} onClick={handleNotificationClose}>
-                        {option}
-                      </MenuItem>
-                    ))}
+                    <MenuItem onClick={handleNotificationClose}> You have {email} new mail to read </MenuItem>
+                    <MenuItem onClick={handleNotificationClose}> You have {message} new messages </MenuItem>
                   </Menu>
                 </Box>
 
