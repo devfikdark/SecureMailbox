@@ -10,6 +10,7 @@ import ConversionPage from "./pages/ConversionPage";
 import NotificationListPage from "./pages/NotificationListPage";
 import CreateNotificationPage from "./pages/CreateNotificationPage";
 import RegisteredUserListPage from "./pages/RegisteredUserListPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route exact path="/" component={LoginPage} />
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/register" component={RegisterPage} />
+            <Route exact path="/forgot-password" component={ForgotPasswordPage} />
           </>
         )}
       </Switch>
