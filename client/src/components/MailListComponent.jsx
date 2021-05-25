@@ -4,7 +4,7 @@ import MailIcon from "@material-ui/icons/Mail";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { makeStyles } from "@material-ui/core/styles";
 import Notification from "./Notification";
-import { green, pink } from "@material-ui/core/colors";
+import { green, pink, blueGrey } from "@material-ui/core/colors";
 import moment from "moment";
 import axios from "axios";
 
@@ -31,7 +31,7 @@ function MailListComponent() {
   const [mailList, setMailList] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const getMailList = () => {
     setLoading(true);
     const currentEmail = localStorage.getItem("email");
     axios
@@ -41,6 +41,7 @@ function MailListComponent() {
         },
       })
       .then((res) => {
+        console.log(res);
         if (res.data.status === "ok") {
           setMailList([...res.data.data].reverse());
         } else {
@@ -49,7 +50,34 @@ function MailListComponent() {
       })
       .catch(() => Notification("Error", "Your session has expired. Please login again", "error"))
       .finally(() => setLoading(false));
-  }, []);
+  };
+
+  useEffect(() => getMailList(), []);
+
+  const readMail = (el) => {
+    console.log(el);
+    axios
+      .patch(
+        `/emails/${el._id}`,
+        { status: false },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        getMailList();
+      })
+      .catch((err) => {
+        if (err.data.response.message) {
+          Notification("Error", `${err.data.response.message}`, "error");
+        } else {
+          Notification("Error", "Something went wrong. Please check your internet connection.", "error");
+        }
+      });
+  };
 
   return (
     <div>
@@ -63,7 +91,7 @@ function MailListComponent() {
             <>
               <ListItem key={el._id}>
                 <ListItemAvatar>
-                  <Avatar className={classes.green}>
+                  <Avatar className={el.type === "Received" && el.status ? classes.green : classes.blueGrey}>
                     <MailIcon />
                   </Avatar>
                 </ListItemAvatar>
@@ -83,7 +111,7 @@ function MailListComponent() {
                   <Chip label={moment(el.createAt).fromNow()} />
                 </Box>
                 <Tooltip title="Download file">
-                  <IconButton aria-label="download" href={el.filePath} target="_blank">
+                  <IconButton aria-label="download" href={el.filePath} target="_blank" onClick={() => readMail(el)}>
                     <ArrowDownwardIcon fontSize="inherit" />
                   </IconButton>
                 </Tooltip>
