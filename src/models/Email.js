@@ -16,6 +16,10 @@ const EmailSchema = new mongoose.Schema({
   to: {
     type: String,
   },
+  status: {
+    type: Boolean,
+    default: true
+  },
   createAt: {
     type: Date,
   },

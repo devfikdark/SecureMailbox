@@ -5,6 +5,7 @@ import authorizedUser from "./src/middlewares/authorizedUser";
 import SignUp from "./src/services/Auth/SignUp";
 import SignIn from "./src/services/Auth/SignIn";
 import LogOut from "./src/services/Auth/LogOut";
+import Forget from "./src/services/Auth/Forget";
 import Users from "./src/services/Admin/Users";
 import Emails from "./src/services/Emails/Emails";
 import Chats from "./src/services/Chats/Chats";
@@ -31,6 +32,9 @@ app.configure(express.rest());
 app.use("/api/auth/signup", new SignUp());
 app.use("/api/auth/signin", new SignIn());
 app.use("/api/auth/logout", new LogOut());
+
+// Forget
+app.use("/api/auth/forget", new Forget());
 
 // Admin
 app.use("/api/users", authorizedUser, new Users());
