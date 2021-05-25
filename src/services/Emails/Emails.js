@@ -1,5 +1,6 @@
 import Email from '../../models/Email';
 import User from '../../models/User';
+import Alert from '../../models/Alert';
 import sendData from '../../utils/response/sendData';
 import sendMessage from '../../utils/response/sendMessage';
 import emailValidator from '../../utils/validators/Email';
@@ -19,6 +20,7 @@ class Emails {
       }
     }
     
+    await Alert.deleteMany({ email, name: 'email' });
     return sendData('ok', emailInfo);
   }
 
@@ -50,6 +52,13 @@ class Emails {
       to,
       createAt: Date.now()
     });
+
+    if (!checkReceiver.status) {
+      await Alert.create({
+        email: to,
+        name: 'email'
+      });
+    }
 
     return sendData('ok', createEmailInfo);
   }

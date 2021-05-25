@@ -1,4 +1,6 @@
 import Chat from "../../models/Chats";
+import User from "../../models/User";
+import Alert from "../../models/Alert";
 import sendData from "../../utils/response/sendData";
 
 class Chats {
@@ -22,6 +24,7 @@ class Chats {
       }
     }
 
+    await Alert.deleteMany({ email: from, name: 'message' });
     return sendData("ok", chatInfo);
   }
 
@@ -34,6 +37,14 @@ class Chats {
       to,
       createAt: Date.now(),
     });
+
+    const checkReceiver = await User.findOne({ email: to });
+    if (!checkReceiver.status) {
+      await Alert.create({
+        email: to,
+        name: 'message'
+      });
+    }
 
     return sendData("ok", createChatInfo);
   }

@@ -12,7 +12,7 @@ class Notifications {
 
   async create (body) {
 
-    const { 
+    const {
       subject,
       message,
     } = body;
