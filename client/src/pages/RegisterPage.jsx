@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Avatar, Grid, Typography, Container, CssBaseline, TextField, Button, CircularProgress } from "@material-ui/core";
+import { Avatar, Grid, Typography, Container, CssBaseline, TextField, Button, CircularProgress, FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { deepPurple } from "@material-ui/core/colors";
 import { Link, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Notification from "../components/Notification";
+import { questionList } from "../utils/constants";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -49,13 +50,15 @@ export default function RegisterPage() {
 
   // STATES
   const [loading, setLoading] = useState(false);
+  const [question, setQuestion] = useState("");
   const [signUpForm, setSignUpForm] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
+    answer: "",
   });
-  const { name, email, password, confirmPassword } = signUpForm;
+  const { name, email, password, confirmPassword, answer } = signUpForm;
 
   // METHODS
   const handleValidation = () => {
@@ -83,6 +86,7 @@ export default function RegisterPage() {
         fullName: name,
         email: email,
         password: password,
+        answer: answer,
         role: "user",
       };
       console.log(information);
@@ -98,7 +102,7 @@ export default function RegisterPage() {
         })
         .finally(() => {
           setLoading(false);
-          setSignUpForm({ name: "", email: "", password: "", confirmPassword: "" });
+          setSignUpForm({ name: "", email: "", password: "", confirmPassword: "", answer: "" });
         });
     } else {
       setLoading(false);
@@ -115,7 +119,7 @@ export default function RegisterPage() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
+        <form className={classes.form} onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField autoFocus name="name" value={name} onChange={handleChange} variant="outlined" required fullWidth label="First Name" />
@@ -123,11 +127,32 @@ export default function RegisterPage() {
             <Grid item xs={12}>
               <TextField variant="outlined" required fullWidth label="Email Address" name="email" value={email} onChange={handleChange} />
             </Grid>
+
             <Grid item xs={12}>
               <TextField variant="outlined" required fullWidth name="password" value={password} onChange={handleChange} label="Password" type="password" />
             </Grid>
             <Grid item xs={12}>
               <TextField variant="outlined" required fullWidth name="confirmPassword" value={confirmPassword} onChange={handleChange} label="Confirm Password" type="password" />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl required fullWidth>
+                <InputLabel required variant="outlined">
+                  Select a question
+                </InputLabel>
+                <Select variant="outlined" value={question} onChange={(e) => setQuestion(e.target.value)} label="Select a question">
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  {questionList.map((el) => (
+                    <MenuItem key={el.id} value={el.id}>
+                      {el.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth variant="outlined" name="answer" label="Your answer" required value={answer} onChange={handleChange} />
             </Grid>
           </Grid>
           <div className={classes.wrapper}>
