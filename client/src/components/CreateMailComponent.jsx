@@ -28,7 +28,9 @@ function CreateMailComponent() {
       })
       .then((res) => {
         console.log(res.data.data);
-        setRegisteredUsers(res.data.data);
+        const currentUser = localStorage.getItem("email");
+        const filteredUsers = res.data.data.filter((el) => el.role !== "admin" && el.email !== currentUser);
+        setRegisteredUsers(filteredUsers);
       })
       .finally(() => setUserListLoading(false));
   }, []);
