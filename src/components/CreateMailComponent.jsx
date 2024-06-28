@@ -66,7 +66,7 @@ function CreateMailComponent() {
         body: formData,
       };
 
-      const cloudInfo = await fetch("https://api.Cloudinary.com/v1_1/dck5ccwjv/raw/upload", options);
+      const cloudInfo = await fetch("https://api.Cloudinary.com/v1_1/eactivities/raw/upload", options);
       const cloudResponse = await cloudInfo.json();
 
       const mailFrom = localStorage.getItem("email");
