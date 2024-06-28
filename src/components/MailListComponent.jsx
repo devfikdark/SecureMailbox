@@ -4,7 +4,7 @@ import MailIcon from "@material-ui/icons/Mail";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { makeStyles } from "@material-ui/core/styles";
 import Notification from "./Notification";
-import { green, pink, blueGrey } from "@material-ui/core/colors";
+import { green, pink } from "@material-ui/core/colors";
 import moment from "moment";
 import axios from "axios";
 
