@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+<div align="center">
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![stars](https://badgen.net/github/stars/devfikdark/securemailbox)
+![license](https://badgen.net/github/license/devfikdark/securemailbox)
+![Last commit](https://badgen.net/github/last-commit/devfikdark/securemailbox)
 
-## Available Scripts
+</div>
 
-In the project directory, you can run:
+# Secure Mail Box
 
-### `npm start`
+Secure Mail Box is a robust and secure communication service designed to ensure the privacy and integrity of your digital correspondence. It offers seamless sending and receiving of emails, providing a reliable platform for all your communication needs. The live chat feature enables instant messaging, fostering real-time interaction and collaboration. For enhanced security, Secure Mail Box incorporates file encryption and decryption using a secret key, safeguarding your sensitive documents and attachments. This ensures that only authorized individuals can access your files, protecting your data from unauthorized access. Whether you're communicating with colleagues, friends, or clients, Secure Mail Box provides a comprehensive suite of tools to keep your information secure and private, combining convenience with top-notch security measures.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Features
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Sent & received mails
+- Live chat
+- File encryption using secret key
+- File decryption using secret key
+  
+## Demo
 
-### `npm test`
+[![Demo Video]](https://github.com/devfikdark/securemailbox/assets/31995155/a3b3460a-115b-45ed-a5f6-61d845d53e4e)
+## Screenshots
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![mail_list](https://github.com/devfikdark/securemailbox/assets/31995155/e7cedbcb-dc6e-463e-8efd-26abe29296f8)
+![mail_send](https://github.com/devfikdark/securemailbox/assets/31995155/c2918142-39c3-4bad-8b5c-68a2457f3202)
+![chat](https://github.com/devfikdark/securemailbox/assets/31995155/f43cd133-2557-4734-adb9-a521c35a0ba9)
+![encrypt](https://github.com/devfikdark/securemailbox/assets/31995155/b4582e4e-bb02-4204-bee8-cedd11bebf97)
+## Run Locally
 
-### `npm run build`
+Clone the project
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+  git clone https://github.com/devfikdark/securemailbox.git
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Go to the project directory
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+  cd securemailbox
+```
 
-### `npm run eject`
+Install dependencies
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+  npm install
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Start the server
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+  npm run start
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+## Tech Stack
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Server:** Node, Feathers.js, Socket
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**Frontend:** React
 
-### Code Splitting
+**Database:** MongoDB
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Feedback
 
-### Analyzing the Bundle Size
+If you have any feedback, please reach out to us at devfiks@gmail.com
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Support
 
-### Making a Progressive Web App
+For support, email devfiks@gmail.com
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+If you like, Give a star ⭐
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<h3 align="left"> 🧡 Support:</h3>
+<p><a href="https://www.buymeacoffee.com/jinnatul"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="Morol" /></a></p>
